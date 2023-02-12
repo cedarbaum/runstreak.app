@@ -56,7 +56,7 @@ export default function Home() {
           href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${runnerEmoji}</text></svg>`}
         />
       </Head>
-      <div className="container flex flex-col mx-auto justify-center items-center min-h-screen p-4">
+      <div className="container flex flex-col mx-auto justify-center items-center md:min-h-screen p-4">
         <div className="w-full">
           <header>
             {showBanner && error && (
