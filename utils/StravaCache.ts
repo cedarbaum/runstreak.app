@@ -37,22 +37,33 @@ export type Athlete = {
   sex?: string;
 };
 
-type StravaCache = {
+type AthleteCache = {
   athlete_schema: number;
-  activity_schema: number;
-  athlete_and_activites: {
-    id: string;
-    athlete: Athlete;
-    activities: Activity[];
-  }[];
+  athletes: Athlete[];
 };
 
-function useStravaCache() {
-  return useLocalStorage<StravaCache | null>("strava-cache", null);
+type ActivitesCache = {
+  activity_schema: number;
+  athlete_activities: {
+    id: string;
+    activities: Activity[];
+  };
+};
+
+function useStravaAthleteCache() {
+  return useLocalStorage<AthleteCache | null>("strava-cache-athletes", null);
+}
+
+function useStravaActivitesCache() {
+  return useLocalStorage<ActivitesCache | null>(
+    "strava-cache-activities",
+    null
+  );
 }
 
 export function useStravaCacheForAthlete(athleteId: string | undefined) {
-  const [value, setValue] = useStravaCache();
+  const [athleteData, setAthleteData] = useStravaAthleteCache();
+  const [activitesData, setActivitiesData] = useStravaActivitesCache();
 
   if (!athleteId) {
     return {
@@ -63,71 +74,56 @@ export function useStravaCacheForAthlete(athleteId: string | undefined) {
     };
   }
 
-  const athlete = value?.athlete_and_activites?.find(
-    (a: any) => a.id === athleteId
-  )?.athlete;
-  const setAthlete = (athlete: Athlete) => {
-    const athleteData = value?.athlete_and_activites?.find(
-      (a: any) => a.id === athleteId
-    );
-
-    let newAthleteAndActivites;
-    if (athleteData !== undefined) {
-      newAthleteAndActivites = value!.athlete_and_activites!.map((a: any) => {
+  const athlete = athleteData?.athletes?.find(
+    (a: Athlete) => a.id === athleteId
+  );
+  const setAthlete = (newAthlete: Athlete) => {
+    let newAthletes: Athlete[];
+    if (athlete !== undefined) {
+      newAthletes = athleteData!.athletes!.map((a: Athlete) => {
         if (a.id === athleteId) {
-          return { ...a, athlete };
+          return newAthlete;
         } else {
           return a;
         }
       });
     } else {
-      newAthleteAndActivites = [
-        {
-          id: athleteId,
-          athlete,
-          activities: null,
-        },
-      ];
+      newAthletes = [newAthlete];
     }
 
-    setValue({
+    setAthleteData({
       athlete_schema: 1,
-      activity_schema: 1,
-      athlete_and_activites: newAthleteAndActivites,
+      athletes: newAthletes,
     });
   };
 
-  const activities = value?.athlete_and_activites?.find(
-    (a: any) => a.id === athleteId
+  const activities = activitesData?.athlete_activites?.find(
+    (a: { id: string; activities: Activity[] }) => a.id === athleteId
   )?.activities;
-  const setActivities = (activities: Activity[]) => {
-    const athleteData = value?.athlete_and_activites?.find(
-      (a: any) => a.id === athleteId
-    );
-
-    let newAthleteAndActivites;
-    if (athleteData !== undefined) {
-      newAthleteAndActivites = value!.athlete_and_activites!.map((a: any) => {
-        if (a.id === athleteId) {
-            return { ...a, activities };
-        } else {
-          return a;
+  const setActivities = (newActivities: Activity[]) => {
+    let newAthleteActivites: { id: string; activities: Activity[] }[];
+    if (activities !== undefined) {
+      newAthleteActivites = activitesData!.athlete_activites!.map(
+        (a: { id: string; activities: Activity[] }) => {
+          if (a.id === athleteId) {
+            return { ...a, activities: newActivities };
+          } else {
+            return a;
+          }
         }
-      });
+      );
     } else {
-      newAthleteAndActivites = [
+      newAthleteActivites = [
         {
           id: athleteId,
-          athlete: null,
-          activities,
+          activities: newActivities,
         },
       ];
     }
 
-    setValue({
-      athlete_schema: 1,
+    setActivitiesData({
       activity_schema: 1,
-      athlete_and_activites: newAthleteAndActivites,
+      athlete_activites: newAthleteActivites,
     });
   };
 

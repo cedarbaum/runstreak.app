@@ -8,15 +8,14 @@ import { Athlete, useStravaCacheForAthlete } from "@/utils/StravaCache";
 import Footer from "@/components/Footer";
 import Banner from "@/components/Banner";
 import { ApplicationContext } from "@/utils/ApplicationContext";
-import useRunnerEmoji from "@/utils/useRunnerEmoji";
 import getErrorMessageFromResponse from "@/utils/ResponseError";
+import getRunnerEmojiForAthlete from "@/utils/getRunnerEmojiForAthlete";
 
 export default function Home() {
   const { data: session } = useSession();
   const { athlete, setAthlete } = useStravaCacheForAthlete(session?.user?.id);
   const { error, setError, setAthleteLoading } = useContext(ApplicationContext);
   const [showBanner, setShowBanner] = useState(true);
-  const runnerEmoji = useRunnerEmoji();
 
   useAsyncEffect(async () => {
     if (session && session.user?.id) {
@@ -60,7 +59,9 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
           rel="icon"
-          href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${runnerEmoji}</text></svg>`}
+          href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>${getRunnerEmojiForAthlete(
+            athlete
+          )}</text></svg>`}
         />
       </Head>
       <div className="container flex flex-col mx-auto justify-center items-center md:min-h-screen p-4">

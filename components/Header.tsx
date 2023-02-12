@@ -2,15 +2,17 @@ import { useContext, useEffect, useState } from "react";
 import { ApplicationContext } from "@/utils/ApplicationContext";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
-import useRunnerEmoji from "@/utils/useRunnerEmoji";
+import getRunnerEmojiForAthlete from "@/utils/getRunnerEmojiForAthlete";
+import { useStravaCacheForAthlete } from "@/utils/StravaCache";
 
 export default function Header() {
   const { data: session } = useSession();
+  const { athlete } = useStravaCacheForAthlete(session?.user?.id);
   const { isActivitiesLoading, isAthleteLoading } =
     useContext(ApplicationContext);
   const [loadingCounter, setLoadingCounter] = useState(0);
   const loading = isActivitiesLoading || isAthleteLoading;
-  const athleteEmoji = useRunnerEmoji();
+  const athleteEmoji = getRunnerEmojiForAthlete(athlete);
 
   useEffect(() => {
     if (!loading) {
