@@ -1,13 +1,16 @@
 import { useContext, useEffect, useState } from "react";
 import { ApplicationContext } from "@/utils/ApplicationContext";
-import { useSession, signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import getRunnerEmojiForAthlete from "@/utils/getRunnerEmojiForAthlete";
-import { useStravaCacheForAthlete } from "@/utils/StravaCache";
+import { Athlete } from "@/utils/StravaCache";
 
-export default function Header() {
+export interface HeaderProps {
+  athlete: Athlete | undefined;
+}
+
+export default function Header({ athlete }: HeaderProps) {
   const { data: session } = useSession();
-  const { athlete } = useStravaCacheForAthlete(session?.user?.id);
   const { isActivitiesLoading, isAthleteLoading } =
     useContext(ApplicationContext);
   const [loadingCounter, setLoadingCounter] = useState(0);

@@ -74,7 +74,7 @@ export default function Home() {
                 onClose={() => setShowBanner(false)}
               />
             )}
-            <Header />
+            <Header athlete={athlete} />
           </header>
           <main>
             <Stats />
