@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import Banner from "@/components/Banner";
 import { ApplicationContext } from "@/utils/ApplicationContext";
 import useRunnerEmoji from "@/utils/useRunnerEmoji";
+import getErrorMessageFromResponse from "@/utils/ResponseError";
 
 export default function Home() {
   const { data: session } = useSession();
@@ -31,7 +32,10 @@ export default function Home() {
         data = (await res.json()).athlete as Athlete;
 
         if (!res.ok) {
-          setError({ message: res.statusText, code: res.status });
+          setError({
+            message: await getErrorMessageFromResponse(res),
+            code: res.status,
+          });
           return;
         }
       } catch (e: any) {
@@ -49,7 +53,10 @@ export default function Home() {
     <>
       <Head>
         <title>Run Streak</title>
-        <meta name="description" content="Track your running streak on Strava!" />
+        <meta
+          name="description"
+          content="Track your running streak on Strava!"
+        />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link
           rel="icon"

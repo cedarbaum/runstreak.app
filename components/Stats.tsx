@@ -10,6 +10,7 @@ import {
   getLongestStreak,
   stats,
 } from "@/utils/RunningStats";
+import getErrorMessageFromResponse from "@/utils/ResponseError";
 
 export default function Stats() {
   const { data: session } = useSession();
@@ -56,7 +57,10 @@ export default function Stats() {
 
           if (!res.ok) {
             setIsActivitiesLoading(false);
-            setError({ message: res.statusText, code: res.status });
+            setError({
+              message: await getErrorMessageFromResponse(res),
+              code: res.status,
+            });
             return;
           }
 
