@@ -4,6 +4,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import getRunnerEmojiForAthlete from "@/utils/getRunnerEmojiForAthlete";
 import { Athlete } from "@/utils/StravaCache";
+import { useWindowWidth } from "@react-hook/window-size";
 
 export interface HeaderProps {
   athlete: Athlete | undefined;
@@ -16,6 +17,9 @@ export default function Header({ athlete }: HeaderProps) {
   const [loadingCounter, setLoadingCounter] = useState(0);
   const loading = isActivitiesLoading || isAthleteLoading;
   const athleteEmoji = getRunnerEmojiForAthlete(athlete);
+  const windowWidth = useWindowWidth();
+
+  const numFlames = windowWidth < 410 && !session ? 1 : 3;
 
   useEffect(() => {
     if (!loading) {
@@ -30,7 +34,7 @@ export default function Header({ athlete }: HeaderProps) {
     return () => clearInterval(interval);
   }, [loading]);
 
-  const fireEmojis = "🔥".repeat(loading ? loadingCounter : 3);
+  const fireEmojis = "🔥".repeat(loading ? loadingCounter : numFlames);
 
   return (
     <div className="mx-auto max-w-7xl">
