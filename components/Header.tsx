@@ -17,9 +17,8 @@ export default function Header({ athlete }: HeaderProps) {
   const [loadingCounter, setLoadingCounter] = useState(0);
   const loading = isActivitiesLoading || isAthleteLoading;
   const athleteEmoji = getRunnerEmojiForAthlete(athlete);
+  const [numFlames, setNumFlames] = useState(3);
   const windowWidth = useWindowWidth();
-
-  const numFlames = windowWidth < 410 && !session ? 1 : 3;
 
   useEffect(() => {
     if (!loading) {
@@ -33,6 +32,11 @@ export default function Header({ athlete }: HeaderProps) {
 
     return () => clearInterval(interval);
   }, [loading]);
+
+  useEffect(() => {
+    const numFlamesBasedOnWindowSize = windowWidth < 410 && !session ? 1 : 3;
+    setNumFlames(numFlamesBasedOnWindowSize);
+  }, [windowWidth]);
 
   const fireEmojis = "🔥".repeat(loading ? loadingCounter : numFlames);
 
