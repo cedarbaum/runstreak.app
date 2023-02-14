@@ -37,7 +37,7 @@ export default function Header({ athlete }: HeaderProps) {
   useEffect(() => {
     const numFlamesBasedOnWindowSize = windowWidth < 410 && !session ? 1 : 3;
     setNumFlames(numFlamesBasedOnWindowSize);
-  }, [windowWidth]);
+  }, [windowWidth, session]);
 
   const fireEmojis = "🔥".repeat(loading ? loadingCounter : numFlames);
 

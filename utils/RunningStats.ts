@@ -31,7 +31,7 @@ interface Statistic {
 export const streakStats: Statistic[] = [
   {
     name: "Streak",
-    calc: (streak: ActivityStreak, settings: Settings) => {
+    calc: (streak: ActivityStreak, settings: Settings | null) => {
       return streak.streakLength;
     },
     unit: (settings) => "",
