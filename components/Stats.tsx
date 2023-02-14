@@ -1,6 +1,6 @@
 import { Activity, useStravaCacheForAthlete } from "@/utils/StravaCache";
 import { useSession } from "next-auth/react";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import useAsyncEffect from "use-async-effect";
 import { ApplicationContext } from "@/utils/ApplicationContext";
 import { timeout } from "@/utils/Timeout";
@@ -96,6 +96,12 @@ export default function Stats() {
       setStreaks(calculateStreaks(now, tz, finalMergedActivities, 1));
     }
   }, [session?.user?.id, activities]);
+
+  useEffect(() => {
+    if (activities) {
+      setStreaks(calculateStreaks(now, tz, activities, 1));
+    }
+  }, [activities, tz]);
 
   const currentStreak = streaks
     ? streaks.find((streak) => {
