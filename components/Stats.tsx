@@ -21,6 +21,7 @@ export default function Stats() {
   const [streaks, setStreaks] = useState<ActivityStreak[] | undefined>(
     undefined
   );
+  const [syncSuccessful, setSyncSuccessful] = useState(false);
 
   const { activities, setActivities } = useStravaCacheForAthlete(
     session?.user?.id
@@ -94,11 +95,12 @@ export default function Stats() {
 
       setActivities(finalMergedActivities);
       setStreaks(calculateStreaks(now, tz, finalMergedActivities, 1));
+      setSyncSuccessful(true);
     }
   }, [session?.user?.id, activities]);
 
   useEffect(() => {
-    if (activities) {
+    if (activities && syncSuccessful) {
       setStreaks(calculateStreaks(now, tz, activities, 1));
     }
   }, [activities, tz]);
@@ -117,7 +119,9 @@ export default function Stats() {
   return (
     <div className="">
       <CurrentStreak currentStreak={currentStreak} />
-      {topTenStreaks && <StreaksTable topN={10} topStreaks={topTenStreaks} />}
+      {topTenStreaks && syncSuccessful && (
+        <StreaksTable topN={10} topStreaks={topTenStreaks} />
+      )}
     </div>
   );
 }
