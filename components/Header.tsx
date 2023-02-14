@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { ApplicationContext } from "@/utils/ApplicationContext";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import getRunnerEmojiForAthlete from "@/utils/getRunnerEmojiForAthlete";
 import { Athlete } from "@/utils/StravaCache";

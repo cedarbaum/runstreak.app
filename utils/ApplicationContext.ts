@@ -12,6 +12,8 @@ export type ApplicationContextType = {
     setIsActivitiesLoading: (isLoading: boolean) => void;
     error: ApplicationError | null;
     setError: (error: ApplicationError | null) => void;
+    headerHeight: number,
+    setHeaderHeight: (height: number) => void,
 }
 
 export const ApplicationContext = createContext<ApplicationContextType>({
@@ -21,4 +23,6 @@ export const ApplicationContext = createContext<ApplicationContextType>({
     setIsActivitiesLoading: () => {},
     error: null,
     setError: () => {},
+    headerHeight: 0,
+    setHeaderHeight: () => {},
 });

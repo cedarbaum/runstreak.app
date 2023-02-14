@@ -17,7 +17,7 @@ const App: AppType<{ session: Session | null }> = ({
   const [athleteLoading, setAthleteLoading] = useState(false);
   const [activitesLoading, setActivitiesLoading] = useState(false);
   const [error, setError] = useState<ApplicationError | null>(null);
-
+  const [headerHeight, setHeaderHeight] = useState<number>(0);
   const [settings, setSettings] = useLocalStorage<Settings | null>(
     "settings",
     null
@@ -32,6 +32,8 @@ const App: AppType<{ session: Session | null }> = ({
         setIsActivitiesLoading: setActivitiesLoading,
         error,
         setError,
+        headerHeight,
+        setHeaderHeight,
       }}
     >
       <SettingsContext.Provider

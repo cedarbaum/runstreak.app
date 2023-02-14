@@ -10,11 +10,13 @@ import Banner from "@/components/Banner";
 import { ApplicationContext } from "@/utils/ApplicationContext";
 import getErrorMessageFromResponse from "@/utils/ResponseError";
 import getRunnerEmojiForAthlete from "@/utils/getRunnerEmojiForAthlete";
+import Measure from "react-measure";
 
 export default function Home() {
   const { data: session } = useSession();
   const { athlete, setAthlete } = useStravaCacheForAthlete(session?.user?.id);
-  const { error, setError, setAthleteLoading } = useContext(ApplicationContext);
+  const { error, setError, setAthleteLoading, setHeaderHeight } =
+    useContext(ApplicationContext);
   const [showBanner, setShowBanner] = useState(true);
 
   useAsyncEffect(async () => {
@@ -66,16 +68,25 @@ export default function Home() {
       </Head>
       <div className="container flex flex-col mx-auto justify-center items-center px-4">
         <div className="w-full">
-          <header className="sticky top-0 z-50 bg-white">
-            {showBanner && error && (
-              <Banner
-                title={"Error"}
-                description={error.message}
-                onClose={() => setShowBanner(false)}
-              />
+          <Measure
+            bounds
+            onResize={(contentRect) => {
+              setHeaderHeight(contentRect.bounds?.height ?? 0);
+            }}
+          >
+            {({ measureRef }) => (
+              <header ref={measureRef} className="sticky top-0 z-50 bg-white">
+                {showBanner && error && (
+                  <Banner
+                    title={"Error"}
+                    description={error.message}
+                    onClose={() => setShowBanner(false)}
+                  />
+                )}
+                <Header athlete={athlete} />
+              </header>
             )}
-            <Header athlete={athlete} />
-          </header>
+          </Measure>
           <main>
             <Stats />
           </main>

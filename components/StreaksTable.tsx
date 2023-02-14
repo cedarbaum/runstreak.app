@@ -1,4 +1,8 @@
 import {
+  ApplicationContext,
+  ApplicationContextType,
+} from "@/utils/ApplicationContext";
+import {
   ActivityStreak,
   activityStats,
   streakStats,
@@ -14,6 +18,9 @@ export interface StreaksTableProps {
 export default function StreaksTable({ topN, topStreaks }: StreaksTableProps) {
   const allStats = streakStats.concat(activityStats);
   const { settings } = useContext<SettingsContextType>(SettingsContext);
+  const { headerHeight } =
+    useContext<ApplicationContextType>(ApplicationContext);
+
   return (
     <div className="mt-10">
       <div className="sm:flex-auto">
@@ -32,7 +39,8 @@ export default function StreaksTable({ topN, topStreaks }: StreaksTableProps) {
                       <th
                         key={`stat${statIdx}`}
                         scope="col"
-                        className={`sticky top-0 z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8 ${
+                        style={{ top: `${headerHeight}px` }}
+                        className={`sticky z-10 border-b border-gray-300 bg-gray-50 bg-opacity-75 py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 backdrop-blur backdrop-filter sm:pl-6 lg:pl-8 ${
                           statIdx === 2 || statIdx == 3
                             ? "hidden md:table-cell"
                             : ""
