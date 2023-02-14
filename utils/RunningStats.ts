@@ -7,10 +7,34 @@ const metersPerSecondToMinutesPerMile = (mps: number) => {
   return 26.8224 / mps;
 };
 
-export const stats = [
+export type ActivityStreak = {
+  streakLength: number;
+  activities: Activity[];
+  startTime: number;
+  endTime: number;
+};
+
+interface Statistic {
+  name: string;
+  calc: (streak: ActivityStreak) => number | string;
+  unit: () => string;
+}
+
+export const streakStats: Statistic[] = [
   {
-    name: "Avg. distance:",
-    calc: (activities: Activity[]) => {
+    name: "Streak",
+    calc: (streak: ActivityStreak) => {
+      return streak.streakLength;
+    },
+    unit: () => "",
+  },
+];
+
+export const activityStats: Statistic[] = [
+  {
+    name: "Avg. distance",
+    calc: (streak: ActivityStreak) => {
+      const activities = streak.activities;
       const totalDistance = activities.reduce(
         (acc, activity) => acc + activity.distance,
         0
@@ -20,8 +44,9 @@ export const stats = [
     unit: () => "mi",
   },
   {
-    name: "Avg. speed:",
-    calc: (activities: Activity[]) => {
+    name: "Avg. speed",
+    calc: (streak: ActivityStreak) => {
+      const activities = streak.activities;
       const totalAvgSpeed = activities.reduce(
         (acc, activity) => acc + activity.average_speed,
         0
@@ -35,8 +60,9 @@ export const stats = [
     unit: () => "min/mi",
   },
   {
-    name: "Avg. moving time:",
-    calc: (activities: Activity[]) => {
+    name: "Avg. moving time",
+    calc: (streak: ActivityStreak) => {
+      const activities = streak.activities;
       const totalDuration = activities.reduce(
         (acc, activity) => acc + activity.moving_time,
         0
@@ -51,8 +77,9 @@ export const stats = [
     unit: () => "",
   },
   {
-    name: "Total distance:",
-    calc: (activities: Activity[]) => {
+    name: "Total distance",
+    calc: (streak: ActivityStreak) => {
+      const activities = streak.activities;
       const totalDistance = activities.reduce(
         (acc, activity) => acc + activity.distance,
         0
@@ -64,20 +91,22 @@ export const stats = [
   },
 ];
 
-export type ActivityDateBucket = {
-  date: DateTime;
-  activities: Activity[];
-};
+function normalizeStreakTimeBounds(ts: number, tz: string): number {
+  return DateTime.fromMillis(ts).setZone(tz).startOf("day").toMillis();
+}
 
-export function getLongestStreak(
-  activities: Activity[]
-): [Activity[], ActivityDateBucket[]] {
-  let longestStreakBuckets: ActivityDateBucket[] = [];
-  let longestStreak: Activity[] = [];
+export function calculateStreaks(
+  now: DateTime,
+  tz: string,
+  activities: Activity[],
+  minStreakLength: number
+): ActivityStreak[] {
+  let activityStreaks: ActivityStreak[] = [];
+  let currentStreakActivites: Activity[] = [];
+  let currentStreakLength = 0;
 
-  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const now = DateTime.now().setZone(tz);
   let lastDate = now.startOf("day");
+  let lastActivity = null;
 
   for (let idx = activities.length - 1; idx >= 0; idx--) {
     const activity = activities[idx];
@@ -87,27 +116,54 @@ export function getLongestStreak(
     const dayDiff = lastDate.diff(activityDate, "days").days;
 
     if (dayDiff === 0) {
-      if (longestStreak.length === 0) {
-        longestStreakBuckets.push({
-          date: activityDate,
-          activities: [activity],
-        });
-      } else {
-        longestStreakBuckets[0].activities.unshift(activity);
+      currentStreakActivites.unshift(activity);
+      if (lastActivity == null) {
+        currentStreakLength++;
       }
-      longestStreak.unshift(activity);
     } else if (dayDiff === 1) {
-      longestStreakBuckets.unshift({
-        date: activityDate,
-        activities: [activity],
-      });
-      longestStreak.unshift(activity);
+      currentStreakActivites.unshift(activity);
+      currentStreakLength++;
     } else {
-      return [longestStreak, longestStreakBuckets];
+      if (currentStreakLength > 0) {
+        activityStreaks.unshift({
+          activities: currentStreakActivites,
+          streakLength: currentStreakLength,
+          startTime: normalizeStreakTimeBounds(
+            currentStreakActivites[0].start_date,
+            tz
+          ),
+          endTime: normalizeStreakTimeBounds(
+            currentStreakActivites[currentStreakActivites.length - 1]
+              .start_date,
+            tz
+          ),
+        });
+      }
+
+      currentStreakActivites = [activity];
+      currentStreakLength = 1;
     }
 
+    lastActivity = activity;
     lastDate = activityDate;
   }
 
-  return [longestStreak, longestStreakBuckets];
+  if (currentStreakLength > 0) {
+    activityStreaks.unshift({
+      activities: currentStreakActivites,
+      streakLength: currentStreakLength,
+      startTime: normalizeStreakTimeBounds(
+        currentStreakActivites[0].start_date,
+        tz
+      ),
+      endTime: normalizeStreakTimeBounds(
+        currentStreakActivites[currentStreakActivites.length - 1].start_date,
+        tz
+      ),
+    });
+  }
+
+  return activityStreaks.filter(
+    (streak) => streak.streakLength > minStreakLength
+  );
 }

@@ -2,30 +2,31 @@ import { Activity, useStravaCacheForAthlete } from "@/utils/StravaCache";
 import { useSession } from "next-auth/react";
 import { useContext, useState } from "react";
 import useAsyncEffect from "use-async-effect";
-import CountUp from "react-countup";
 import { ApplicationContext } from "@/utils/ApplicationContext";
 import { timeout } from "@/utils/Timeout";
-import {
-  ActivityDateBucket,
-  getLongestStreak,
-  stats,
-} from "@/utils/RunningStats";
+import { ActivityStreak, calculateStreaks } from "@/utils/RunningStats";
 import getErrorMessageFromResponse from "@/utils/ResponseError";
+import { DateTime } from "luxon";
+import CurrentStreak from "./CurrentStreak";
+import StreaksTable from "./StreaksTable";
 
 export default function Stats() {
   const { data: session } = useSession();
-  const [activityDateBuckets, setActivityDateBuckers] = useState<
-    ActivityDateBucket[] | undefined
-  >(undefined);
+  const [streaks, setStreaks] = useState<ActivityStreak[] | undefined>(
+    undefined
+  );
 
   const { activities, setActivities } = useStravaCacheForAthlete(
     session?.user?.id
   );
   const { setError, setIsActivitiesLoading } = useContext(ApplicationContext);
 
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const now = DateTime.now().setZone(tz);
+
   useAsyncEffect(async () => {
     if (session && session.user?.id) {
-      if (activityDateBuckets !== undefined) {
+      if (streaks !== undefined) {
         return;
       }
 
@@ -35,9 +36,8 @@ export default function Stats() {
       }
 
       let page = 1;
-      let streakContinues = true;
       let allFetchedActivities: Activity[] = [];
-      let activityStreakLength = 0;
+      let numNewActivitiesFetched = 0;
 
       setIsActivitiesLoading(true);
       do {
@@ -73,16 +73,11 @@ export default function Stats() {
           return;
         }
 
+        numNewActivitiesFetched = fetchedActivities.length;
         allFetchedActivities = fetchedActivities.concat(allFetchedActivities);
-
-        const [activityStreak, _] = getLongestStreak(allFetchedActivities);
-
-        streakContinues = activityStreak.length > activityStreakLength;
-        activityStreakLength = activityStreak.length;
         page += 1;
-
         await timeout(100);
-      } while (streakContinues);
+      } while (numNewActivitiesFetched > 0);
 
       setIsActivitiesLoading(false);
 
@@ -90,69 +85,34 @@ export default function Stats() {
         ? activities.concat(allFetchedActivities)
         : allFetchedActivities;
 
-      const [finalActivityStreak, bucketedActivityStreak] = getLongestStreak(
-        finalMergedActivities
-      );
-
-      setActivities(finalActivityStreak);
-      setActivityDateBuckers(bucketedActivityStreak);
+      setActivities(finalMergedActivities);
+      setStreaks(calculateStreaks(now, tz, finalMergedActivities, 1));
     }
   }, [session?.user?.id, activities]);
 
+  const currentStreak = streaks
+    ? streaks.find((streak) => {
+        const diff = now
+          .startOf("day")
+          .diff(DateTime.fromMillis(streak.endTime).setZone(tz), "days");
+        return diff.days < 2;
+      })
+    : undefined;
+  const topTenStreaks = streaks
+    ?.sort((s1, s2) =>
+      s1.streakLength < s2.streakLength
+        ? -1
+        : s1.streakLength === s2.streakLength
+        ? 0
+        : 1
+    )
+    .reverse()
+    .slice(0, 10);
+
   return (
     <div className="">
-      <dl className="grid grid-cols-1 overflow-hidden bg-white md:grid-cols-2">
-        <div className="px-4 py-5 sm:p-6 border-l border-t border-b border-r md:border-r-0 border-gray-200">
-          <dt className="text-base font-normal text-gray-900">
-            <span className="text-2xl font-bold">Streak:</span>
-            <br />
-            {activityDateBuckets ? (
-              <CountUp start={0} end={activityDateBuckets.length} delay={0}>
-                {({ countUpRef }) => (
-                  <span
-                    className="text-8xl inline-block text-center w-full"
-                    ref={countUpRef}
-                  />
-                )}
-              </CountUp>
-            ) : (
-              <span className="text-8xl inline-block text-center w-full">
-                --
-              </span>
-            )}
-          </dt>
-          <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
-            <div className="flex items-baseline text-2xl font-semibold text-indigo-600">
-              <span className="ml-2 text-sm font-medium text-gray-500"></span>
-            </div>
-          </dd>
-        </div>
-        <div className="h-full md:border-t border-l">
-          <dl className="h-full grid grid-cols-2 grid-rows-2 overflow-hidden bg-white">
-            {stats.map((stat, idx) => (
-              <div
-                key={`stat${idx}`}
-                className="px-4 py-5 sm:p-6 border-r border-b border-gray-200"
-              >
-                <dt className="text-base font-normal text-gray-900">
-                  <span className="font-bold">{stat.name}</span>
-                  <br />
-                  <span>
-                    {activities && activityDateBuckets
-                      ? `${stat.calc(activities)} ${stat.unit()}`
-                      : "--"}
-                  </span>
-                </dt>
-                <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
-                  <div className="flex items-baseline text-2xl font-semibold text-indigo-600">
-                    <span className="ml-2 text-sm font-medium text-gray-500"></span>
-                  </div>
-                </dd>
-              </div>
-            ))}
-          </dl>
-        </div>
-      </dl>
+      <CurrentStreak currentStreak={currentStreak} />
+      {topTenStreaks && <StreaksTable topN={10} topStreaks={topTenStreaks} />}
     </div>
   );
 }

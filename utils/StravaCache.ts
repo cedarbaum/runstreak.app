@@ -28,6 +28,7 @@ export type Activity = {
   average_speed: number;
   max_speed: number;
   distance: number;
+  total_elevation_gain: number;
 };
 
 export type Athlete = {

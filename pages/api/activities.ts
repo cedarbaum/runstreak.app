@@ -73,15 +73,14 @@ export default async function handler(
           average_speed: activity.average_speed,
           max_speed: activity.max_speed,
           distance: activity.distance,
+          total_elevation_gain: activity.total_elevation_gain,
         };
       });
 
-    return res
-      .status(200)
-      .json({
-        schema_version: schemaVersion,
-        activities: simplifiedActivities,
-      });
+    return res.status(200).json({
+      schema_version: schemaVersion,
+      activities: simplifiedActivities,
+    });
   } catch (e: any) {
     return res
       .status(e?.statusCode || 500)

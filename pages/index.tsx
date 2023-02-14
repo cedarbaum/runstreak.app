@@ -64,9 +64,9 @@ export default function Home() {
           )}</text></svg>`}
         />
       </Head>
-      <div className="container flex flex-col mx-auto justify-center items-center md:min-h-screen p-4">
+      <div className="container flex flex-col mx-auto justify-center items-center px-4">
         <div className="w-full">
-          <header>
+          <header className="sticky top-0 z-50 bg-white">
             {showBanner && error && (
               <Banner
                 title={"Error"}
@@ -79,7 +79,7 @@ export default function Home() {
           <main>
             <Stats />
           </main>
-          <footer>
+          <footer className="sticky bottom-0 z-50 bg-white">
             <Footer />
           </footer>
         </div>
