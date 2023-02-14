@@ -79,7 +79,7 @@ export default function Home() {
           <main>
             <Stats />
           </main>
-          <footer className="sticky bottom-0 z-50 bg-white">
+          <footer className="sticky bottom-0 z-25 bg-white">
             <Footer />
           </footer>
         </div>

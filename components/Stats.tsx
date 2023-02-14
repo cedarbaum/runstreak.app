@@ -9,6 +9,8 @@ import getErrorMessageFromResponse from "@/utils/ResponseError";
 import { DateTime } from "luxon";
 import CurrentStreak from "./CurrentStreak";
 import StreaksTable from "./StreaksTable";
+import { SettingsContext } from "@/utils/SettingsContext";
+import { getTimeZone } from "@/utils/SettingsUtil";
 
 export default function Stats() {
   const { data: session } = useSession();
@@ -20,8 +22,9 @@ export default function Stats() {
     session?.user?.id
   );
   const { setError, setIsActivitiesLoading } = useContext(ApplicationContext);
+  const { settings } = useContext(SettingsContext)
 
-  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const tz = getTimeZone(settings)
   const now = DateTime.now().setZone(tz);
 
   useAsyncEffect(async () => {

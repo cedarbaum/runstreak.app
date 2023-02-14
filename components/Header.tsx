@@ -5,6 +5,7 @@ import Image from "next/image";
 import getRunnerEmojiForAthlete from "@/utils/getRunnerEmojiForAthlete";
 import { Athlete } from "@/utils/StravaCache";
 import { useWindowWidth } from "@react-hook/window-size";
+import SettingsPopover from "./SettingsPopover";
 
 export interface HeaderProps {
   athlete: Athlete | undefined;
@@ -66,13 +67,7 @@ export default function Header({ athlete }: HeaderProps) {
               />
             </a>
           ) : (
-            <a
-              href="#"
-              className="bg-strava text-white inline-flex items-center justify-center whitespace-nowrap border border-transparent px-4 py-2 font-medium"
-              onClick={() => signOut()}
-            >
-              Sign out
-            </a>
+            <SettingsPopover />
           )}
         </div>
       </div>

@@ -1,10 +1,18 @@
 import { DateTime, Duration } from "luxon";
+import { Settings } from "./SettingsContext";
+import { getDistanceUnit } from "./SettingsUtil";
 import { Activity } from "./StravaCache";
 
 const metersToMiles = (meters: number) => meters * 0.000621371;
 
+const metersToKm = (meters: number) => meters / 1000;
+
 const metersPerSecondToMinutesPerMile = (mps: number) => {
   return 26.8224 / mps;
+};
+
+const metersPerSecondToMinutesPerKm = (mps: number) => {
+  return 16.666666667 / mps;
 };
 
 export type ActivityStreak = {
@@ -16,52 +24,60 @@ export type ActivityStreak = {
 
 interface Statistic {
   name: string;
-  calc: (streak: ActivityStreak) => number | string;
-  unit: () => string;
+  calc: (streak: ActivityStreak, settings: Settings | null) => number | string;
+  unit: (settings: Settings | null) => string;
 }
 
 export const streakStats: Statistic[] = [
   {
     name: "Streak",
-    calc: (streak: ActivityStreak) => {
+    calc: (streak: ActivityStreak, settings: Settings) => {
       return streak.streakLength;
     },
-    unit: () => "",
+    unit: (settings) => "",
   },
 ];
 
 export const activityStats: Statistic[] = [
   {
     name: "Avg. distance",
-    calc: (streak: ActivityStreak) => {
+    calc: (streak: ActivityStreak, settings: Settings | null) => {
       const activities = streak.activities;
       const totalDistance = activities.reduce(
         (acc, activity) => acc + activity.distance,
         0
       );
-      return (metersToMiles(totalDistance) / activities.length).toFixed(2);
+
+      const distanceUnit = getDistanceUnit(settings);
+      const distance =
+        distanceUnit === "mi"
+          ? metersToMiles(totalDistance)
+          : metersToKm(totalDistance);
+      return (distance / activities.length).toFixed(2);
     },
-    unit: () => "mi",
+    unit: (settings) => getDistanceUnit(settings),
   },
   {
     name: "Avg. speed",
-    calc: (streak: ActivityStreak) => {
+    calc: (streak: ActivityStreak, settings: Settings | null) => {
       const activities = streak.activities;
       const totalAvgSpeed = activities.reduce(
         (acc, activity) => acc + activity.average_speed,
         0
       );
-      const minutesPerMile = metersPerSecondToMinutesPerMile(
-        totalAvgSpeed / activities.length
-      );
+      const distanceUnit = getDistanceUnit(settings);
+      const minutesPerUnit =
+        distanceUnit === "mi"
+          ? metersPerSecondToMinutesPerMile(totalAvgSpeed / activities.length)
+          : metersPerSecondToMinutesPerKm(totalAvgSpeed / activities.length);
 
-      return Duration.fromObject({ minutes: minutesPerMile }).toFormat("mm:ss");
+      return Duration.fromObject({ minutes: minutesPerUnit }).toFormat("mm:ss");
     },
-    unit: () => "min/mi",
+    unit: (settings) => `min/${getDistanceUnit(settings)}`,
   },
   {
     name: "Avg. moving time",
-    calc: (streak: ActivityStreak) => {
+    calc: (streak: ActivityStreak, settings: Settings | null) => {
       const activities = streak.activities;
       const totalDuration = activities.reduce(
         (acc, activity) => acc + activity.moving_time,
@@ -74,20 +90,25 @@ export const activityStats: Statistic[] = [
 
       return averageDuration.toFormat("hh:mm:ss");
     },
-    unit: () => "",
+    unit: (settings) => "",
   },
   {
     name: "Total distance",
-    calc: (streak: ActivityStreak) => {
+    calc: (streak: ActivityStreak, settings: Settings | null) => {
       const activities = streak.activities;
       const totalDistance = activities.reduce(
         (acc, activity) => acc + activity.distance,
         0
       );
 
-      return metersToMiles(totalDistance).toFixed(2);
+      const distanceUnit = getDistanceUnit(settings);
+      const units =
+        distanceUnit === "mi"
+          ? metersToMiles(totalDistance)
+          : metersToKm(totalDistance);
+      return units.toFixed(2);
     },
-    unit: () => "mi",
+    unit: (settings) => getDistanceUnit(settings),
   },
 ];
 

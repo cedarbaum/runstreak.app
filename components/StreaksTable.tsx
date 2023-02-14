@@ -3,6 +3,8 @@ import {
   activityStats,
   streakStats,
 } from "@/utils/RunningStats";
+import { SettingsContext, SettingsContextType } from "@/utils/SettingsContext";
+import { useContext } from "react";
 
 export interface StreaksTableProps {
   topN: number;
@@ -11,6 +13,7 @@ export interface StreaksTableProps {
 
 export default function StreaksTable({ topN, topStreaks }: StreaksTableProps) {
   const allStats = streakStats.concat(activityStats);
+  const { settings } = useContext<SettingsContextType>(SettingsContext);
   return (
     <div className="mt-10">
       <div className="sm:flex-auto">
@@ -35,7 +38,10 @@ export default function StreaksTable({ topN, topStreaks }: StreaksTableProps) {
                             : ""
                         }`}
                       >
-                        {stat.name}
+                        {stat.name}{" "}
+                        {stat.unit(settings) !== ""
+                          ? `(${stat.unit(settings)})`
+                          : ""}
                       </th>
                     ))}
                   </tr>
@@ -52,7 +58,7 @@ export default function StreaksTable({ topN, topStreaks }: StreaksTableProps) {
                               : ""
                           }`}
                         >
-                          {stat.calc(streak)}
+                          {stat.calc(streak, settings)}
                         </td>
                       ))}
                     </tr>

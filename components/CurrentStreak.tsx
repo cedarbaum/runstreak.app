@@ -1,14 +1,15 @@
 import CountUp from "react-countup";
-import {
-  ActivityStreak,
-  activityStats,
-} from "@/utils/RunningStats";
+import { ActivityStreak, activityStats } from "@/utils/RunningStats";
+import { useContext } from "react";
+import { SettingsContext, SettingsContextType } from "@/utils/SettingsContext";
 
 export interface CurrentStreakProps {
   currentStreak: ActivityStreak | undefined;
 }
 
 export default function CurrentStreak({ currentStreak }: CurrentStreakProps) {
+  const { settings } = useContext<SettingsContextType>(SettingsContext);
+
   return (
     <dl className="grid grid-cols-1 overflow-hidden bg-white md:grid-cols-2">
       <div className="px-4 py-5 sm:p-6 border-l border-t border-b border-r md:border-r-0 border-gray-200">
@@ -28,11 +29,6 @@ export default function CurrentStreak({ currentStreak }: CurrentStreakProps) {
             <span className="text-8xl inline-block text-center w-full">--</span>
           )}
         </dt>
-        <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
-          <div className="flex items-baseline text-2xl font-semibold text-indigo-600">
-            <span className="ml-2 text-sm font-medium text-gray-500"></span>
-          </div>
-        </dd>
       </div>
       <div className="h-full md:border-t border-l">
         <dl className="h-full grid grid-cols-2 grid-rows-2 overflow-hidden bg-white">
@@ -46,15 +42,12 @@ export default function CurrentStreak({ currentStreak }: CurrentStreakProps) {
                 <br />
                 <span>
                   {currentStreak
-                    ? `${stat.calc(currentStreak)} ${stat.unit()}`
+                    ? `${stat.calc(currentStreak, settings)} ${stat.unit(
+                        settings
+                      )}`
                     : "--"}
                 </span>
               </dt>
-              <dd className="mt-1 flex items-baseline justify-between md:block lg:flex">
-                <div className="flex items-baseline text-2xl font-semibold text-indigo-600">
-                  <span className="ml-2 text-sm font-medium text-gray-500"></span>
-                </div>
-              </dd>
             </div>
           ))}
         </dl>
