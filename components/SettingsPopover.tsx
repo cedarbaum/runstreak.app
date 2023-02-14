@@ -1,5 +1,5 @@
 import { SettingsContext, SettingsContextType } from "@/utils/SettingsContext";
-import { getDistanceUnit, getTimeZone } from "@/utils/SettingsUtil";
+import { getDistanceUnit } from "@/utils/SettingsUtil";
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 import { signOut } from "next-auth/react";
@@ -15,6 +15,7 @@ export default function SettingsPopover() {
   const clearCache = () => {
     localStorage.removeItem("strava-cache-athletes");
     localStorage.removeItem("strava-cache-activities");
+    localStorage.removeItem("settings");
     setShowClearCacheModal(false);
     signOut();
   };
