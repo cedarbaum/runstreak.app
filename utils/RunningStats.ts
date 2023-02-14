@@ -188,3 +188,33 @@ export function calculateStreaks(
     (streak) => streak.streakLength > minStreakLength
   );
 }
+
+export function sortStreaks(s1: ActivityStreak, s2: ActivityStreak) {
+  if (s1.streakLength < s2.streakLength) {
+    return -1;
+  }
+
+  if (s1.streakLength > s2.streakLength) {
+    return 1;
+  }
+
+  const s1TotalDistance = s1.activities.reduce(
+    (acc, activity) => acc + activity.distance,
+    0
+  );
+
+  const s2TotalDistance = s2.activities.reduce(
+    (acc, activity) => acc + activity.distance,
+    0
+  );
+
+  if (s1TotalDistance < s2TotalDistance) {
+    return -1;
+  }
+
+  if (s1TotalDistance > s2TotalDistance) {
+    return 1;
+  }
+
+  return 0;
+}

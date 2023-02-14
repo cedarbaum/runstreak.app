@@ -4,7 +4,11 @@ import { useContext, useState } from "react";
 import useAsyncEffect from "use-async-effect";
 import { ApplicationContext } from "@/utils/ApplicationContext";
 import { timeout } from "@/utils/Timeout";
-import { ActivityStreak, calculateStreaks } from "@/utils/RunningStats";
+import {
+  ActivityStreak,
+  calculateStreaks,
+  sortStreaks,
+} from "@/utils/RunningStats";
 import getErrorMessageFromResponse from "@/utils/ResponseError";
 import { DateTime } from "luxon";
 import CurrentStreak from "./CurrentStreak";
@@ -22,9 +26,9 @@ export default function Stats() {
     session?.user?.id
   );
   const { setError, setIsActivitiesLoading } = useContext(ApplicationContext);
-  const { settings } = useContext(SettingsContext)
+  const { settings } = useContext(SettingsContext);
 
-  const tz = getTimeZone(settings)
+  const tz = getTimeZone(settings);
   const now = DateTime.now().setZone(tz);
 
   useAsyncEffect(async () => {
@@ -101,16 +105,8 @@ export default function Stats() {
         return diff.days < 2;
       })
     : undefined;
-  const topTenStreaks = streaks
-    ?.sort((s1, s2) =>
-      s1.streakLength < s2.streakLength
-        ? -1
-        : s1.streakLength === s2.streakLength
-        ? 0
-        : 1
-    )
-    .reverse()
-    .slice(0, 10);
+
+  const topTenStreaks = streaks?.sort(sortStreaks).reverse().slice(0, 10);
 
   return (
     <div className="">
