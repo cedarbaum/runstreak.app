@@ -1,5 +1,6 @@
 import { useSession, signIn, signOut } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   const { data: session } = useSession();
@@ -21,13 +22,13 @@ export default function Footer() {
           </div>
         )}
         <div className="flex lg:w-0 lg:flex-1 mb-2 md:mb-0">
-          <a
+          <Link
             className="underline decoration-indigo-600"
             href="/about"
             rel="noreferrer"
           >
             About / Privacy
-          </a>
+          </Link>
         </div>
         <div className="items-center justify-end md:flex">
           <Image

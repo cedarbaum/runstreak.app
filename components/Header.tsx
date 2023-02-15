@@ -6,6 +6,7 @@ import getRunnerEmojiForAthlete from "@/utils/getRunnerEmojiForAthlete";
 import { Athlete } from "@/utils/StravaCache";
 import { useWindowWidth } from "@react-hook/window-size";
 import SettingsPopover from "./SettingsPopover";
+import Link from "next/link";
 
 export interface HeaderProps {
   athlete: Athlete | undefined;
@@ -45,12 +46,12 @@ export default function Header({ athlete }: HeaderProps) {
     <div className="mx-auto max-w-7xl">
       <div className="flex items-center justify-between py-6 md:justify-start md:space-x-10">
         <div className="flex justify-start lg:w-0 lg:flex-1">
-          <a href="/">
+          <Link href="/">
             <span className="text-4xl">
               {athleteEmoji}
               {fireEmojis}‍️️
             </span>
-          </a>
+          </Link>
         </div>
         <div className="-my-2 -mr-2 md:hidden"></div>
         <div className="items-center justify-end md:flex md:flex-1 lg:w-0">

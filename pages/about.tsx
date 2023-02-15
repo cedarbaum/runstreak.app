@@ -74,7 +74,7 @@ export default function About() {
         <b>we cannot access any of your Strava data!</b>
         <ul className="list-disc list-inside mt-4 marker:text-indigo-600">
           <li>
-            All athlete and activity data is stored in your browser's local
+            All athlete and activity data is stored in your browser&apos;s local
             storage (delete any time by going to{" "}
             <b>Settings &gt; Clear cache</b>). No activity or athlete data is
             persisted on our servers.
