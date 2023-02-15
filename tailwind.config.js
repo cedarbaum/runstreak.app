@@ -9,11 +9,7 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {
-      colors: {
-        strava: "#fc4c02",
-      },
-    },
+    extend: {},
   },
   plugins: [],
 };

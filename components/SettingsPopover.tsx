@@ -36,20 +36,18 @@ export default function SettingsPopover() {
           <>
             <Popover.Button
               className={`
-                ${open ? "relative z-[300]" : "text-opacity-90"}
-                group inline-flex items-center bg-strava px-3 py-2 text-base font-medium text-white hover:text-opacity-100 focus:outline-none`}
+                ${open ? "relative z-[300]" : ""}
+                inline-flex items-center border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
             >
               <span>Settings</span>
               {open ? (
                 <ChevronDownIcon
-                  className={`${open ? "" : "text-opacity-70"}
-                  ml-2 h-5 w-5 text-white transition duration-150 ease-in-out group-hover:text-opacity-80`}
+                  className="ml-2 h-5 w-5 text-white transition duration-150 ease-in-out group-hover:text-opacity-80"
                   aria-hidden="true"
                 />
               ) : (
                 <ChevronUpIcon
-                  className={`${open ? "" : "text-opacity-70"}
-                  ml-2 h-5 w-5 text-white transition duration-150 ease-in-out group-hover:text-opacity-80`}
+                  className="ml-2 h-5 w-5 text-white transition duration-150 ease-in-out group-hover:text-opacity-80"
                   aria-hidden="true"
                 />
               )}
@@ -75,9 +73,9 @@ export default function SettingsPopover() {
                           onClick={() =>
                             setSettings({ ...settings, distance_unit: "km" })
                           }
-                          className={`font-bold relative -ml-px inline-flex items-center border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 focus:z-10 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300 ${
+                          className={`relative -ml-px inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 ${
                             distanceUnit === "km"
-                              ? "bg-strava text-white"
+                              ? "bg-indigo-600 text-white"
                               : "bg-white hover-bg-gray-50"
                           }`}
                         >
@@ -88,9 +86,9 @@ export default function SettingsPopover() {
                           onClick={() =>
                             setSettings({ ...settings, distance_unit: "mi" })
                           }
-                          className={`font-bold relative -ml-px inline-flex items-center border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 focus:z-10 focus:border-gray-300 focus:outline-none focus:ring-1 focus:ring-gray-300 ${
+                          className={`relative -ml-px inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 ${
                             distanceUnit === "mi"
-                              ? "bg-strava text-white"
+                              ? "bg-indigo-600 text-white"
                               : "bg-white hover-bg-gray-50"
                           }`}
                         >
@@ -106,22 +104,21 @@ export default function SettingsPopover() {
                     </div>
                     <div className="flex justify-between items-center mt-8 w-full">
                       <div className="w-[45%]">
-                        <a
-                          href="#"
-                          className="w-full px-4 py-2 font-medium inline-flex justify-center bg-red-600 text-white hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
+                        <button
+                          type="button"
+                          className="w-full inline-flex w-full justify-center border border-transparent bg-red-600 px-4 py-2 text-base text-sm font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2"
                           onClick={() => setShowClearCacheModal(true)}
                         >
                           Clear cache
-                        </a>
+                        </button>
                       </div>
                       <div className="w-[45%]">
-                        <a
-                          href="#"
-                          className="w-full bg-strava text-white inline-flex items-center justify-center whitespace-nowrap border border-transparent px-4 py-2 font-medium"
+                        <button
+                          className="w-full inline-flex items-center justify-center border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                           onClick={() => signOut()}
                         >
                           Sign out
-                        </a>
+                        </button>
                       </div>
                     </div>
                   </div>

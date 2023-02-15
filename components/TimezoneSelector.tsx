@@ -96,7 +96,7 @@ export default function TimezoneSelector() {
     useContext<SettingsContextType>(SettingsContext);
 
   const currentTz = getTimeZone(settings);
-  if (allTimezones.find((tz) => tz === currentTz)) {
+  if (!allTimezones.find((tz) => tz === currentTz)) {
     allTimezones.push(currentTz);
   }
 
@@ -108,7 +108,7 @@ export default function TimezoneSelector() {
       {({ open }) => (
         <>
           <div className="relative">
-            <Listbox.Button className="relative w-full cursor-default border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500 sm:text-sm">
+            <Listbox.Button className="relative w-full cursor-default border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm">
               <span className="block truncate">{currentTz}</span>
               <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <ChevronUpDownIcon
@@ -125,13 +125,13 @@ export default function TimezoneSelector() {
               leaveFrom="opacity-100"
               leaveTo="opacity-0"
             >
-              <Listbox.Options className="absolute z-100 max-h-60 w-full overflow-auto bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+              <Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
                 {allTimezones.map((tz, idx) => (
                   <Listbox.Option
                     key={idx}
                     className={({ active }) =>
                       classNames(
-                        active ? "text-white bg-strava" : "text-gray-900",
+                        active ? "text-white bg-indigo-600" : "text-gray-900",
                         "relative cursor-default select-none py-2 pl-8 pr-4"
                       )
                     }
@@ -151,7 +151,7 @@ export default function TimezoneSelector() {
                         {selected ? (
                           <span
                             className={classNames(
-                              active ? "text-white" : "text-gray-600",
+                              active ? "text-white" : "text-indigo-600",
                               "absolute inset-y-0 left-0 flex items-center pl-1.5"
                             )}
                           >
