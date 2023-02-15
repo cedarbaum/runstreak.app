@@ -9,6 +9,7 @@ import { AppType } from "next/app";
 import { Session } from "next-auth";
 import useLocalStorage from "@/utils/useLocalStorage";
 import { Settings, SettingsContext } from "@/utils/SettingsContext";
+import Layout from "@/components/layout";
 
 const App: AppType<{ session: Session | null }> = ({
   Component,
@@ -43,7 +44,9 @@ const App: AppType<{ session: Session | null }> = ({
         }}
       >
         <SessionProvider session={session}>
-          <Component {...pageProps} />
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
         </SessionProvider>
       </SettingsContext.Provider>
     </ApplicationContext.Provider>

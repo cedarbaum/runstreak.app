@@ -45,7 +45,7 @@ export default function Header({ athlete }: HeaderProps) {
     <div className="mx-auto max-w-7xl">
       <div className="flex items-center justify-between py-6 md:justify-start md:space-x-10">
         <div className="flex justify-start lg:w-0 lg:flex-1">
-          <a href="#">
+          <a href="/">
             <span className="text-4xl">
               {athleteEmoji}
               {fireEmojis}‍️️
