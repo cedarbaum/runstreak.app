@@ -1,5 +1,5 @@
 import { SettingsContext, SettingsContextType } from "@/utils/SettingsContext";
-import { getDistanceUnit } from "@/utils/SettingsUtil";
+import { getDistanceUnit, getMinDistance } from "@/utils/SettingsUtil";
 import { Popover, Transition } from "@headlessui/react";
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 import { signOut } from "next-auth/react";
@@ -22,6 +22,15 @@ export default function SettingsPopover() {
 
   const cancel = () => {
     setShowClearCacheModal(false);
+  };
+
+  const onMinDistanceInput = (e: any) => {
+    const minDistance = parseFloat(e?.target?.value);
+    if (isNaN(minDistance) || minDistance < 0) {
+      return;
+    }
+
+    setSettings({ ...settings, min_distance: minDistance });
   };
 
   const distanceUnit = getDistanceUnit(settings);
@@ -101,6 +110,17 @@ export default function SettingsPopover() {
                       <div className="w-1/2">
                         <TimezoneSelector />
                       </div>
+                    </div>
+                    <div className="flex justify-between items-center mt-8">
+                      <span className="font-bold">
+                        Min. distance ({getDistanceUnit(settings)}):
+                      </span>
+                      <input
+                        className="relative w-1/4 cursor-default border border-gray-300 bg-white py-2 pl-3 pr-3 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                        type="text"
+                        placeholder={getMinDistance(settings).toString()}
+                        onInput={onMinDistanceInput}
+                      />
                     </div>
                     <div className="flex justify-between items-center mt-8 w-full">
                       <div className="w-[45%]">

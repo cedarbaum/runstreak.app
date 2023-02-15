@@ -14,7 +14,11 @@ import { DateTime } from "luxon";
 import CurrentStreak from "./CurrentStreak";
 import StreaksTable from "./StreaksTable";
 import { SettingsContext } from "@/utils/SettingsContext";
-import { getTimeZone } from "@/utils/SettingsUtil";
+import {
+  getDistanceUnit,
+  getMinDistance,
+  getTimeZone,
+} from "@/utils/SettingsUtil";
 
 export default function Stats() {
   const { data: session } = useSession();
@@ -31,6 +35,12 @@ export default function Stats() {
 
   const tz = getTimeZone(settings);
   const now = DateTime.now().setZone(tz);
+
+  const minDistance = getMinDistance(settings);
+  const minDistanceMeters =
+    getDistanceUnit(settings) === "km"
+      ? minDistance * 1000
+      : minDistance * 1609.34;
 
   useAsyncEffect(async () => {
     if (session && session.user?.id) {
@@ -94,16 +104,18 @@ export default function Stats() {
         : allFetchedActivities;
 
       setActivities(finalMergedActivities);
-      setStreaks(calculateStreaks(now, tz, finalMergedActivities, 1));
+      setStreaks(
+        calculateStreaks(now, tz, finalMergedActivities, 1, minDistanceMeters)
+      );
       setSyncSuccessful(true);
     }
   }, [session?.user?.id, activities]);
 
   useEffect(() => {
     if (activities && syncSuccessful) {
-      setStreaks(calculateStreaks(now, tz, activities, 1));
+      setStreaks(calculateStreaks(now, tz, activities, 1, minDistanceMeters));
     }
-  }, [activities, tz]);
+  }, [activities, tz, minDistanceMeters]);
 
   const currentStreak = streaks
     ? streaks.find((streak) => {

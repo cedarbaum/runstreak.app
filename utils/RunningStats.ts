@@ -120,7 +120,8 @@ export function calculateStreaks(
   now: DateTime,
   tz: string,
   activities: Activity[],
-  minStreakLength: number
+  minStreakLength: number,
+  minActivityDistanceMeters: number
 ): ActivityStreak[] {
   let activityStreaks: ActivityStreak[] = [];
   let currentStreakActivites: Activity[] = [];
@@ -128,6 +129,10 @@ export function calculateStreaks(
 
   let lastDate = now.startOf("day");
   let lastActivity = null;
+
+  activities = activities.filter(
+    (a) => a.distance >= minActivityDistanceMeters
+  );
 
   for (let idx = activities.length - 1; idx >= 0; idx--) {
     const activity = activities[idx];
