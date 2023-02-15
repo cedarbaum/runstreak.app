@@ -73,7 +73,7 @@ export default function SettingsPopover() {
                           onClick={() =>
                             setSettings({ ...settings, distance_unit: "km" })
                           }
-                          className={`relative -ml-px inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 ${
+                          className={`relative -ml-px inline-flex items-center border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 ${
                             distanceUnit === "km"
                               ? "bg-indigo-600 text-white"
                               : "bg-white hover-bg-gray-50"
@@ -86,7 +86,7 @@ export default function SettingsPopover() {
                           onClick={() =>
                             setSettings({ ...settings, distance_unit: "mi" })
                           }
-                          className={`relative -ml-px inline-flex items-center border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 ${
+                          className={`relative -ml-px inline-flex items-center border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 ${
                             distanceUnit === "mi"
                               ? "bg-indigo-600 text-white"
                               : "bg-white hover-bg-gray-50"
