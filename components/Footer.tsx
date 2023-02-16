@@ -7,9 +7,9 @@ export default function Footer() {
 
   return (
     <div className="mx-auto max-w-7xl">
-      <div className="flex items-center justify-between py-6 md:space-x-10 flex-col md:flex-row">
+      <div className="flex items-center justify-between py-2 md:py-6 md:space-x-10 flex-col md:flex-row border-t md:border-t-0">
         {session && (
-          <div className="flex justify-start lg:w-0 lg:flex-1 mb-2 md:mb-0">
+          <div className="flex justify-start lg:w-0 lg:flex-1 mb-0.5 md:mb-0">
             <span>Signed in as&nbsp;</span>
             <a
               className="underline decoration-indigo-600"
@@ -21,7 +21,7 @@ export default function Footer() {
             </a>
           </div>
         )}
-        <div className="flex lg:w-0 lg:flex-1 mb-2 md:mb-0">
+        <div className="flex lg:w-0 lg:flex-1 mb-0.5 md:mb-0">
           <Link
             className="underline decoration-indigo-600"
             href="/about"

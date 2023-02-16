@@ -1,6 +1,6 @@
 export default function About() {
   return (
-    <>
+    <article className="p-2">
       <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
         About
       </h2>
@@ -103,6 +103,6 @@ export default function About() {
           </li>
         </ul>
       </section>
-    </>
+    </article>
   );
 }
