@@ -116,7 +116,7 @@ export default function SettingsPopover() {
                         Min. distance ({getDistanceUnit(settings)}):
                       </span>
                       <input
-                        className="relative w-1/4 cursor-default border border-gray-300 bg-white py-2 pl-3 pr-3 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                        className="relative w-1/4 cursor-default border border-gray-300 bg-white py-2 pl-3 pr-3 text-left shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm text-center"
                         type="text"
                         placeholder={getMinDistance(settings).toString()}
                         onInput={onMinDistanceInput}
