@@ -52,7 +52,7 @@ export default function About() {
               href="https://github.com/cedarbaum/runstreak.app"
               target="_"
             >
-              GitHub
+              GitHub (MIT licensed)
             </a>
           </li>
           <li>Made with ❤️ in 🗽</li>
@@ -76,12 +76,12 @@ export default function About() {
           <li>
             All athlete and activity data is stored in your browser&apos;s local
             storage (delete any time by going to{" "}
-            <b>Settings &gt; Clear cache</b>). No activity or athlete data is
+            <b>Settings &gt; Clear cache</b>). No athlete or activity data is
             persisted on our servers.
           </li>
           <li>
-            We only use cookies to store your login session info (considered a
-            strictly necessary cookie under GDPR). No tracking cookies are used.
+            We only use cookies to maintain your login session. No tracking
+            cookies are used.
           </li>
           <li>
             Any analytics are collected using{" "}
@@ -98,7 +98,7 @@ export default function About() {
             The only data we store is the number of requests your account makes
             during a 24 hour period. This is to ensure that a user does not use
             too much of our Strava API quota. The Strava account IDs are
-            securely encrypted before being stored, so the original IDs cannot
+            securely hashed before being stored, so the original IDs cannot
             be practically recovered from our database (even by us).
           </li>
         </ul>
