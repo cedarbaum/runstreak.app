@@ -10,6 +10,7 @@ import { ApplicationContext } from "@/utils/ApplicationContext";
 import getErrorMessageFromResponse from "@/utils/ResponseError";
 import getRunnerEmojiForAthlete from "@/utils/getRunnerEmojiForAthlete";
 import Measure from "react-measure";
+import { useRouter } from "next/router";
 
 export default function Layout({ children }: { children: JSX.Element }) {
   const { data: session } = useSession();
@@ -17,6 +18,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
   const { error, setError, setAthleteLoading, setHeaderHeight } =
     useContext(ApplicationContext);
   const [showBanner, setShowBanner] = useState(true);
+  const router = useRouter();
 
   useAsyncEffect(async () => {
     if (session && session.user?.id) {
@@ -88,7 +90,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
           </Measure>
           <main>{children}</main>
           <footer className="sticky bottom-0 z-20 bg-white">
-            <Footer />
+            <Footer hideAboutLabel={router?.pathname === '/about'} />
           </footer>
         </div>
       </div>
