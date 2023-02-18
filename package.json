@@ -18,6 +18,7 @@
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
     "@types/react-measure": "^2.0.8",
+    "@vercel/analytics": "^0.1.10",
     "eslint": "8.33.0",
     "eslint-config-next": "13.1.6",
     "luxon": "^3.2.1",

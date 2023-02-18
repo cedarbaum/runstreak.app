@@ -10,6 +10,7 @@ import { Session } from "next-auth";
 import useLocalStorage from "@/utils/useLocalStorage";
 import { Settings, SettingsContext } from "@/utils/SettingsContext";
 import Layout from "@/components/layout";
+import { Analytics } from '@vercel/analytics/react';
 
 const App: AppType<{ session: Session | null }> = ({
   Component,
@@ -47,6 +48,7 @@ const App: AppType<{ session: Session | null }> = ({
           <Layout>
             <Component {...pageProps} />
           </Layout>
+	  <Analytics />
         </SessionProvider>
       </SettingsContext.Provider>
     </ApplicationContext.Provider>
