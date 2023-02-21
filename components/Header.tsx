@@ -13,7 +13,7 @@ export interface HeaderProps {
 }
 
 export default function Header({ athlete }: HeaderProps) {
-  const { data: session } = useSession();
+  const { data: session, status: sessionStatus } = useSession();
   const { isActivitiesLoading, isAthleteLoading } =
     useContext(ApplicationContext);
   const [loadingCounter, setLoadingCounter] = useState(0);
@@ -54,23 +54,25 @@ export default function Header({ athlete }: HeaderProps) {
           </Link>
         </div>
         <div className="-my-2 -mr-2 md:hidden"></div>
-        <div className="items-center justify-end md:flex md:flex-1 lg:w-0">
-          {!session ? (
-            <a
-              className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
-              onClick={() => signIn("strava")}
-            >
-              <Image
-                src="btn_strava_connectwith_orange.svg"
-                width={193}
-                height={48}
-                alt={"Connect with Strava"}
-              />
-            </a>
-          ) : (
-            <SettingsPopover />
-          )}
-        </div>
+        {sessionStatus !== "loading" && (
+          <div className="items-center justify-end md:flex md:flex-1 lg:w-0">
+            {!session ? (
+              <a
+                className="whitespace-nowrap text-base font-medium text-gray-500 hover:text-gray-900"
+                onClick={() => signIn("strava")}
+              >
+                <Image
+                  src="btn_strava_connectwith_orange.svg"
+                  width={193}
+                  height={48}
+                  alt={"Connect with Strava"}
+                />
+              </a>
+            ) : (
+              <SettingsPopover />
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
