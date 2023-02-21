@@ -20,6 +20,22 @@ import {
   getTimeZone,
 } from "@/utils/SettingsUtil";
 
+function mergeNewActivites(
+  existingActivities: Activity[],
+  newActivities: Activity[]
+): Activity[] {
+  // If activity with id already existed, take newer one
+  const newActivityIds = new Set(newActivities.map((a) => a.id));
+  existingActivities = existingActivities.filter(
+    (a) => !newActivityIds.has(a.id)
+  );
+
+  // Ensure ordering
+  newActivities = newActivities.sort((a1, a2) => a1.start_date - a2.start_date);
+
+  return existingActivities.concat(newActivities);
+}
+
 export default function Stats() {
   const { data: session } = useSession();
   const [streaks, setStreaks] = useState<ActivityStreak[] | undefined>(
@@ -82,9 +98,13 @@ export default function Stats() {
             return;
           }
 
-          fetchedActivities = (
-            await res.json()
-          ).activities.reverse() as Activity[];
+          fetchedActivities = (await res.json()).activities as Activity[];
+
+          // Reverse if doing full hydration, since activites are returned in
+          // reverse chronological order
+          if (!mostRecentActivity) {
+            fetchedActivities = fetchedActivities.reverse();
+          }
         } catch (e: any) {
           setIsActivitiesLoading(false);
           setError({ message: e.message ?? "Unknown error" });
@@ -99,11 +119,12 @@ export default function Stats() {
 
       setIsActivitiesLoading(false);
 
-      const finalMergedActivities = activities
-        ? activities.concat(allFetchedActivities)
-        : allFetchedActivities;
-
+      const finalMergedActivities = mergeNewActivites(
+        activities ?? [],
+        allFetchedActivities
+      );
       setActivities(finalMergedActivities);
+
       setStreaks(
         calculateStreaks(now, tz, finalMergedActivities, 1, minDistanceMeters)
       );
