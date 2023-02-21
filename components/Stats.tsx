@@ -130,7 +130,7 @@ export default function Stats() {
       );
       setSyncSuccessful(true);
     }
-  }, [session?.user?.id, activities]);
+  }, [session?.user?.id, activities?.length]);
 
   useEffect(() => {
     if (activities && syncSuccessful) {
