@@ -23,7 +23,7 @@ type AthleteCache = {
   athletes: Athlete[];
 };
 
-type ActivitesCache = {
+type ActivitiesCache = {
   activity_schema: number;
   athlete_activities: {
     id: string;
@@ -35,8 +35,8 @@ function useStravaAthleteCache() {
   return useLocalStorage<AthleteCache | null>("strava-cache-athletes", null);
 }
 
-function useStravaActivitesCache() {
-  return useLocalStorage<ActivitesCache | null>(
+function useStravaActivitiesCache() {
+  return useLocalStorage<ActivitiesCache | null>(
     "strava-cache-activities",
     null
   );
@@ -44,7 +44,7 @@ function useStravaActivitesCache() {
 
 export function useStravaCacheForAthlete(athleteId: string | undefined) {
   const [athleteData, setAthleteData] = useStravaAthleteCache();
-  const [activitesData, setActivitiesData] = useStravaActivitesCache();
+  const [activitiesData, setActivitiesData] = useStravaActivitiesCache();
 
   if (!athleteId) {
     return {
@@ -78,13 +78,13 @@ export function useStravaCacheForAthlete(athleteId: string | undefined) {
     });
   };
 
-  const activities = activitesData?.athlete_activites?.find(
+  const activities = activitiesData?.athlete_activities?.find(
     (a: { id: string; activities: Activity[] }) => a.id === athleteId
   )?.activities;
   const setActivities = (newActivities: Activity[]) => {
-    let newAthleteActivites: { id: string; activities: Activity[] }[];
+    let newAthleteActivities: { id: string; activities: Activity[] }[];
     if (activities !== undefined) {
-      newAthleteActivites = activitesData!.athlete_activites!.map(
+      newAthleteActivities = activitiesData!.athlete_activities!.map(
         (a: { id: string; activities: Activity[] }) => {
           if (a.id === athleteId) {
             return { ...a, activities: newActivities };
@@ -94,7 +94,7 @@ export function useStravaCacheForAthlete(athleteId: string | undefined) {
         }
       );
     } else {
-      newAthleteActivites = [
+      newAthleteActivities = [
         {
           id: athleteId,
           activities: newActivities,
@@ -104,7 +104,7 @@ export function useStravaCacheForAthlete(athleteId: string | undefined) {
 
     setActivitiesData({
       activity_schema: 1,
-      athlete_activites: newAthleteActivites,
+      athlete_activities: newAthleteActivities,
     });
   };
 

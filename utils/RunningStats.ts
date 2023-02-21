@@ -124,7 +124,7 @@ export function calculateStreaks(
   minActivityDistanceMeters: number
 ): ActivityStreak[] {
   let activityStreaks: ActivityStreak[] = [];
-  let currentStreakActivites: Activity[] = [];
+  let currentStreakActivities: Activity[] = [];
   let currentStreakLength = 0;
 
   let lastDate = now.startOf("day");
@@ -142,31 +142,31 @@ export function calculateStreaks(
     const dayDiff = lastDate.diff(activityDate, "days").days;
 
     if (dayDiff === 0) {
-      currentStreakActivites.unshift(activity);
+      currentStreakActivities.unshift(activity);
       if (lastActivity == null) {
         currentStreakLength++;
       }
     } else if (dayDiff === 1) {
-      currentStreakActivites.unshift(activity);
+      currentStreakActivities.unshift(activity);
       currentStreakLength++;
     } else {
       if (currentStreakLength > 0) {
         activityStreaks.unshift({
-          activities: currentStreakActivites,
+          activities: currentStreakActivities,
           streakLength: currentStreakLength,
           startTime: normalizeStreakTimeBounds(
-            currentStreakActivites[0].start_date,
+            currentStreakActivities[0].start_date,
             tz
           ),
           endTime: normalizeStreakTimeBounds(
-            currentStreakActivites[currentStreakActivites.length - 1]
+            currentStreakActivities[currentStreakActivities.length - 1]
               .start_date,
             tz
           ),
         });
       }
 
-      currentStreakActivites = [activity];
+      currentStreakActivities = [activity];
       currentStreakLength = 1;
     }
 
@@ -176,14 +176,14 @@ export function calculateStreaks(
 
   if (currentStreakLength > 0) {
     activityStreaks.unshift({
-      activities: currentStreakActivites,
+      activities: currentStreakActivities,
       streakLength: currentStreakLength,
       startTime: normalizeStreakTimeBounds(
-        currentStreakActivites[0].start_date,
+        currentStreakActivities[0].start_date,
         tz
       ),
       endTime: normalizeStreakTimeBounds(
-        currentStreakActivites[currentStreakActivites.length - 1].start_date,
+        currentStreakActivities[currentStreakActivities.length - 1].start_date,
         tz
       ),
     });

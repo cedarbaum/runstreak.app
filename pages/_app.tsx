@@ -10,14 +10,14 @@ import { Session } from "next-auth";
 import useLocalStorage from "@/utils/useLocalStorage";
 import { Settings, SettingsContext } from "@/utils/SettingsContext";
 import Layout from "@/components/layout";
-import { Analytics } from '@vercel/analytics/react';
+import { Analytics } from "@vercel/analytics/react";
 
 const App: AppType<{ session: Session | null }> = ({
   Component,
   pageProps: { session, ...pageProps },
 }) => {
   const [athleteLoading, setAthleteLoading] = useState(false);
-  const [activitesLoading, setActivitiesLoading] = useState(false);
+  const [activitiesLoading, setActivitiesLoading] = useState(false);
   const [error, setError] = useState<ApplicationError | null>(null);
   const [headerHeight, setHeaderHeight] = useState<number>(0);
   const [settings, setSettings] = useLocalStorage<Settings | null>(
@@ -29,7 +29,7 @@ const App: AppType<{ session: Session | null }> = ({
     <ApplicationContext.Provider
       value={{
         isAthleteLoading: athleteLoading,
-        isActivitiesLoading: activitesLoading,
+        isActivitiesLoading: activitiesLoading,
         setAthleteLoading: setAthleteLoading,
         setIsActivitiesLoading: setActivitiesLoading,
         error,
@@ -48,7 +48,7 @@ const App: AppType<{ session: Session | null }> = ({
           <Layout>
             <Component {...pageProps} />
           </Layout>
-	  <Analytics />
+          <Analytics />
         </SessionProvider>
       </SettingsContext.Provider>
     </ApplicationContext.Provider>

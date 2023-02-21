@@ -20,7 +20,7 @@ import {
   getTimeZone,
 } from "@/utils/SettingsUtil";
 
-function mergeNewActivites(
+function mergeNewActivities(
   existingActivities: Activity[],
   newActivities: Activity[]
 ): Activity[] {
@@ -100,7 +100,7 @@ export default function Stats() {
 
           fetchedActivities = (await res.json()).activities as Activity[];
 
-          // Reverse if doing full hydration, since activites are returned in
+          // Reverse if doing full hydration, since activities are returned in
           // reverse chronological order
           if (!mostRecentActivity) {
             fetchedActivities = fetchedActivities.reverse();
@@ -119,7 +119,7 @@ export default function Stats() {
 
       setIsActivitiesLoading(false);
 
-      const finalMergedActivities = mergeNewActivites(
+      const finalMergedActivities = mergeNewActivities(
         activities ?? [],
         allFetchedActivities
       );
