@@ -41,7 +41,7 @@ export default function Footer({
             src="api_logo_pwrdBy_strava_horiz_light.svg"
             width={193}
             height={48}
-            alt={"Connect with Strava"}
+            alt="Powered by Strava"
           />
         </div>
       </div>

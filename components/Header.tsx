@@ -66,7 +66,7 @@ export default function Header({ athlete }: HeaderProps) {
                   src="btn_strava_connectwith_orange.svg"
                   width={193}
                   height={48}
-                  alt={"Connect with Strava"}
+                  alt="Connect with Strava"
                 />
               </button>
             ) : (
