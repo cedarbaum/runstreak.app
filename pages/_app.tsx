@@ -11,6 +11,8 @@ import useLocalStorage from "@/utils/useLocalStorage";
 import { Settings, SettingsContext } from "@/utils/SettingsContext";
 import Layout from "@/components/layout";
 import { Analytics } from "@vercel/analytics/react";
+import { useStravaCache } from "@/utils/StravaCache";
+import { StravaContext } from "@/utils/StravaContext";
 
 const App: AppType<{ session: Session | null }> = ({
   Component,
@@ -24,6 +26,8 @@ const App: AppType<{ session: Session | null }> = ({
     "settings",
     null
   );
+  const { getAthlete, setAthlete, getActivities, setActivities } =
+    useStravaCache();
 
   return (
     <ApplicationContext.Provider
@@ -38,19 +42,23 @@ const App: AppType<{ session: Session | null }> = ({
         setHeaderHeight,
       }}
     >
-      <SettingsContext.Provider
-        value={{
-          settings,
-          setSettings,
-        }}
+      <StravaContext.Provider
+        value={{ getAthlete, setAthlete, getActivities, setActivities }}
       >
-        <SessionProvider session={session}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-          <Analytics />
-        </SessionProvider>
-      </SettingsContext.Provider>
+        <SettingsContext.Provider
+          value={{
+            settings,
+            setSettings,
+          }}
+        >
+          <SessionProvider session={session}>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+            <Analytics />
+          </SessionProvider>
+        </SettingsContext.Provider>
+      </StravaContext.Provider>
     </ApplicationContext.Provider>
   );
 };

@@ -3,7 +3,7 @@ import { useSession } from "next-auth/react";
 import Header from "@/components/Header";
 import { useContext, useState } from "react";
 import useAsyncEffect from "use-async-effect";
-import { Athlete, useStravaCacheForAthlete } from "@/utils/StravaCache";
+import { Athlete, useStravaCache } from "@/utils/StravaCache";
 import Footer from "@/components/Footer";
 import Banner from "@/components/Banner";
 import { ApplicationContext } from "@/utils/ApplicationContext";
@@ -11,14 +11,17 @@ import getErrorMessageFromResponse from "@/utils/ResponseError";
 import getRunnerEmojiForAthlete from "@/utils/getRunnerEmojiForAthlete";
 import Measure from "react-measure";
 import { useRouter } from "next/router";
+import { StravaContext } from "@/utils/StravaContext";
 
 export default function Layout({ children }: { children: JSX.Element }) {
   const { data: session } = useSession();
-  const { athlete, setAthlete } = useStravaCacheForAthlete(session?.user?.id);
+  const { getAthlete, setAthlete } = useContext(StravaContext);
   const { error, setError, setAthleteLoading, setHeaderHeight } =
     useContext(ApplicationContext);
   const [showBanner, setShowBanner] = useState(true);
   const router = useRouter();
+
+  const athlete = getAthlete(session?.user?.id);
 
   useAsyncEffect(async () => {
     if (session && session.user?.id) {
@@ -90,7 +93,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
           </Measure>
           <main>{children}</main>
           <footer className="sticky bottom-0 z-20 bg-white">
-            <Footer hideAboutLabel={router?.pathname === '/about'} />
+            <Footer hideAboutLabel={router?.pathname === "/about"} />
           </footer>
         </div>
       </div>

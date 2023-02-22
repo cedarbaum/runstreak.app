@@ -1,4 +1,4 @@
-import { Activity, useStravaCacheForAthlete } from "@/utils/StravaCache";
+import { Activity } from "@/utils/StravaCache";
 import { useSession } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
 import useAsyncEffect from "use-async-effect";
@@ -19,6 +19,7 @@ import {
   getMinDistance,
   getTimeZone,
 } from "@/utils/SettingsUtil";
+import { StravaContext } from "@/utils/StravaContext";
 
 function mergeNewActivities(
   existingActivities: Activity[],
@@ -43,9 +44,7 @@ export default function Stats() {
   );
   const [syncSuccessful, setSyncSuccessful] = useState(false);
 
-  const { activities, setActivities } = useStravaCacheForAthlete(
-    session?.user?.id
-  );
+  const { getActivities, setActivities } = useContext(StravaContext);
   const { setError, setIsActivitiesLoading } = useContext(ApplicationContext);
   const { settings } = useContext(SettingsContext);
 
@@ -57,6 +56,8 @@ export default function Stats() {
     getDistanceUnit(settings) === "km"
       ? minDistance * 1000
       : minDistance * 1609.34;
+
+  const activities = getActivities(session?.user?.id);
 
   useAsyncEffect(async () => {
     if (session && session.user?.id) {
@@ -123,7 +124,7 @@ export default function Stats() {
         activities ?? [],
         allFetchedActivities
       );
-      setActivities(finalMergedActivities);
+      setActivities(session.user.id, finalMergedActivities);
 
       setStreaks(
         calculateStreaks(now, tz, finalMergedActivities, 1, minDistanceMeters)

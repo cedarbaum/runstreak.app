@@ -1,6 +1,6 @@
 import { Athlete } from "./StravaCache";
 
-export default function getRunnerEmojiForAthlete(athlete: Athlete | undefined) {
+export default function getRunnerEmojiForAthlete(athlete: Athlete | undefined | null) {
   let athleteEmoji = "🏃";
   if (athlete?.sex === "M") {
     athleteEmoji = "🏃‍♂️‍️";

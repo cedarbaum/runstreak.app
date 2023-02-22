@@ -28,7 +28,7 @@ type ActivitiesCache = {
   athlete_activities: {
     id: string;
     activities: Activity[];
-  };
+  }[];
 };
 
 function useStravaAthleteCache() {
@@ -42,34 +42,27 @@ function useStravaActivitiesCache() {
   );
 }
 
-export function useStravaCacheForAthlete(athleteId: string | undefined) {
+export function useStravaCache() {
   const [athleteData, setAthleteData] = useStravaAthleteCache();
   const [activitiesData, setActivitiesData] = useStravaActivitiesCache();
 
-  if (!athleteId) {
-    return {
-      athlete: null,
-      setAthlete: () => {},
-      activities: null,
-      setActivities: () => {},
-    };
-  }
+  const getAthlete = (athleteId: string | undefined): Athlete | null =>
+    athleteData?.athletes?.find((a: Athlete) => a.id === athleteId) ?? null;
 
-  const athlete = athleteData?.athletes?.find(
-    (a: Athlete) => a.id === athleteId
-  );
-  const setAthlete = (newAthlete: Athlete) => {
+  const setAthlete = (athlete: Athlete) => {
     let newAthletes: Athlete[];
-    if (athlete !== undefined) {
+    const existingAthlete = getAthlete(athlete.id);
+    if (existingAthlete) {
       newAthletes = athleteData!.athletes!.map((a: Athlete) => {
-        if (a.id === athleteId) {
-          return newAthlete;
+        if (a.id === athlete.id) {
+          return athlete;
         } else {
           return a;
         }
       });
     } else {
-      newAthletes = [newAthlete];
+      const allAthletes = athleteData?.athletes ?? [];
+      newAthletes = allAthletes.concat([athlete]);
     }
 
     setAthleteData({
@@ -78,12 +71,15 @@ export function useStravaCacheForAthlete(athleteId: string | undefined) {
     });
   };
 
-  const activities = activitiesData?.athlete_activities?.find(
-    (a: { id: string; activities: Activity[] }) => a.id === athleteId
-  )?.activities;
-  const setActivities = (newActivities: Activity[]) => {
+  const getActivities = (athleteId: string | undefined): Activity[] | null =>
+    activitiesData?.athlete_activities?.find(
+      (a: { id: string; activities: Activity[] }) => a.id === athleteId
+    )?.activities ?? null;
+
+  const setActivities = (athleteId: string, newActivities: Activity[]) => {
     let newAthleteActivities: { id: string; activities: Activity[] }[];
-    if (activities !== undefined) {
+    const existingActivitiesForAthlete = getActivities(athleteId);
+    if (existingActivitiesForAthlete) {
       newAthleteActivities = activitiesData!.athlete_activities!.map(
         (a: { id: string; activities: Activity[] }) => {
           if (a.id === athleteId) {
@@ -94,12 +90,13 @@ export function useStravaCacheForAthlete(athleteId: string | undefined) {
         }
       );
     } else {
-      newAthleteActivities = [
+      const allActivityData = activitiesData?.athlete_activities ?? [];
+      newAthleteActivities = allActivityData.concat([
         {
           id: athleteId,
           activities: newActivities,
         },
-      ];
+      ]);
     }
 
     setActivitiesData({
@@ -108,5 +105,5 @@ export function useStravaCacheForAthlete(athleteId: string | undefined) {
     });
   };
 
-  return { athlete, setAthlete, activities, setActivities };
+  return { getAthlete, setAthlete, getActivities, setActivities };
 }

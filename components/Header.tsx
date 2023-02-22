@@ -9,7 +9,7 @@ import SettingsPopover from "./SettingsPopover";
 import Link from "next/link";
 
 export interface HeaderProps {
-  athlete: Athlete | undefined;
+  athlete: Athlete | undefined | null;
 }
 
 export default function Header({ athlete }: HeaderProps) {

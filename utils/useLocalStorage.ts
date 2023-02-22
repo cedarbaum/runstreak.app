@@ -5,7 +5,7 @@ export default function useLocalStorage<T>(key: string, fallbackValue: T) {
   const [value, setValue] = useState(() => {
     const stored =
       typeof window !== "undefined" ? localStorage.getItem(key) : null;
-    return stored ? JSON.parse(stored) : fallbackValue;
+    return stored ? JSON.parse(stored) as T : fallbackValue;
   });
 
   useEffect(() => {
