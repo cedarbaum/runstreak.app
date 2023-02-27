@@ -17,7 +17,8 @@ export default function Header({ athlete }: HeaderProps) {
   const { isActivitiesLoading, isAthleteLoading } =
     useContext(ApplicationContext);
   const [loadingCounter, setLoadingCounter] = useState(0);
-  const loading = isActivitiesLoading || isAthleteLoading;
+  const sessionLoading = sessionStatus === "loading";
+  const loading = isActivitiesLoading || isAthleteLoading || sessionLoading;
   const athleteEmoji = getRunnerEmojiForAthlete(athlete);
   const [numFlames, setNumFlames] = useState(3);
   const windowWidth = useWindowWidth();
@@ -54,7 +55,7 @@ export default function Header({ athlete }: HeaderProps) {
           </Link>
         </div>
         <div className="-my-2 -mr-2 md:hidden"></div>
-        {sessionStatus !== "loading" && (
+        {!sessionLoading && (
           <div className="items-center justify-end md:flex md:flex-1 lg:w-0">
             {!session ? (
               <button
