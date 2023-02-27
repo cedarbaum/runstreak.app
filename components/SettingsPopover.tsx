@@ -50,12 +50,12 @@ export default function SettingsPopover() {
             >
               <span>Settings</span>
               {open ? (
-                <ChevronDownIcon
+                <ChevronUpIcon
                   className="ml-2 h-5 w-5 text-white transition duration-150 ease-in-out group-hover:text-opacity-80"
                   aria-hidden="true"
                 />
               ) : (
-                <ChevronUpIcon
+                <ChevronDownIcon
                   className="ml-2 h-5 w-5 text-white transition duration-150 ease-in-out group-hover:text-opacity-80"
                   aria-hidden="true"
                 />
