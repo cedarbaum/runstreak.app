@@ -119,10 +119,10 @@ export default function useStrava(athleteId: string | undefined) {
 
   return {
     athlete,
-    athleteLoading,
+    athleteLoading: athleteLoading && !!athlete,
     athleteError,
     activities,
-    activitiesLoading,
+    activitiesLoading: activitiesLoading && !!athlete,
     activitiesError,
   };
 }
