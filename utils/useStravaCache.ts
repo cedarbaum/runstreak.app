@@ -1,31 +1,12 @@
-import { useContext } from "react";
-import { StravaCacheContext } from "./StravaCacheContext";
+import { Activity, Athlete } from "./StravaTypes";
 import useLocalStorage from "./useLocalStorage";
 
-export type Activity = {
-  id: string;
-  elapsed_time: number;
-  moving_time: number;
-  start_date: number;
-  average_speed: number;
-  max_speed: number;
-  distance: number;
-  total_elevation_gain: number;
-};
-
-export type Athlete = {
-  id: string;
-  firstname?: string;
-  lastname?: string;
-  sex?: string;
-};
-
-export type AthleteCache = {
+type AthleteCache = {
   athlete_schema: number;
   athletes: Athlete[];
 };
 
-export type ActivitiesCache = {
+type ActivitiesCache = {
   activity_schema: number;
   athlete_activities: {
     id: string;
@@ -44,7 +25,7 @@ function useStravaActivitiesCache() {
   );
 }
 
-export function useStravaCache() {
+export default function useStravaCache() {
   const [athleteData, setAthleteData] = useStravaAthleteCache();
   const [activitiesData, setActivitiesData] = useStravaActivitiesCache();
 

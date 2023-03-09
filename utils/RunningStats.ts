@@ -1,7 +1,7 @@
 import { DateTime, Duration } from "luxon";
 import { Settings } from "./SettingsContext";
 import { getDistanceUnit } from "./SettingsUtil";
-import { Activity } from "./StravaCache";
+import { Activity } from "./StravaTypes";
 
 const metersToMiles = (meters: number) => meters * 0.000621371;
 

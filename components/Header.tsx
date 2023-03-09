@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import getRunnerEmojiForAthlete from "@/utils/getRunnerEmojiForAthlete";
-import { Athlete } from "@/utils/StravaCache";
+import { Athlete } from "@/utils/StravaTypes";
 import { useWindowWidth } from "@react-hook/window-size";
 import SettingsPopover from "./SettingsPopover";
 import Link from "next/link";

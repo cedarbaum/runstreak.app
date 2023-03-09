@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";
-import { Athlete } from "@/utils/StravaCache";
+import { Athlete } from "@/utils/StravaTypes";
 
 import stravaApi from "strava-v3";
 import { DynamoDbRequestThrottler } from "@/utils/DynamoDbRequestThrottler";

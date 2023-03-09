@@ -1,7 +1,8 @@
-import { Activity, Athlete, useStravaCache } from "./StravaCache";
+import useStravaCache from "./useStravaCache";
 import getErrorMessageFromResponse from "./ResponseError";
 import { timeout } from "./Timeout";
 import { useQuery } from "@tanstack/react-query";
+import { Activity, Athlete } from "./StravaTypes";
 
 function mergeNewActivities(
   existingActivities: Activity[],

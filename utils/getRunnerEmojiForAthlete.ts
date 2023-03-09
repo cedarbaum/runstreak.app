@@ -1,4 +1,4 @@
-import { Athlete } from "./StravaCache";
+import { Athlete } from "./StravaTypes";
 
 export default function getRunnerEmojiForAthlete(athlete: Athlete | undefined | null) {
   let athleteEmoji = "🏃";
