@@ -1,28 +1,11 @@
-import React, {  createContext } from 'react';
-
-export type ApplicationError = {
-    message: string;
-    code?: number;
-}
+import React, { createContext } from "react";
 
 export type ApplicationContextType = {
-    isAthleteLoading: boolean;
-    setAthleteLoading: (isLoading: boolean) => void;
-    isActivitiesLoading: boolean;
-    setIsActivitiesLoading: (isLoading: boolean) => void;
-    error: ApplicationError | null;
-    setError: (error: ApplicationError | null) => void;
-    headerHeight: number,
-    setHeaderHeight: (height: number) => void,
-}
+  headerHeight: number;
+  setHeaderHeight: (height: number) => void;
+};
 
 export const ApplicationContext = createContext<ApplicationContextType>({
-    isAthleteLoading: false,
-    setAthleteLoading: () => {},
-    isActivitiesLoading: false,
-    setIsActivitiesLoading: () => {},
-    error: null,
-    setError: () => {},
-    headerHeight: 0,
-    setHeaderHeight: () => {},
+  headerHeight: 0,
+  setHeaderHeight: () => {},
 });

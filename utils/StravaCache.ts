@@ -1,3 +1,5 @@
+import { useContext } from "react";
+import { StravaCacheContext } from "./StravaCacheContext";
 import useLocalStorage from "./useLocalStorage";
 
 export type Activity = {
@@ -18,12 +20,12 @@ export type Athlete = {
   sex?: string;
 };
 
-type AthleteCache = {
+export type AthleteCache = {
   athlete_schema: number;
   athletes: Athlete[];
 };
 
-type ActivitiesCache = {
+export type ActivitiesCache = {
   activity_schema: number;
   athlete_activities: {
     id: string;

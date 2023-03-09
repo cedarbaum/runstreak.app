@@ -1,15 +1,10 @@
-import { Activity } from "@/utils/StravaCache";
 import { useSession } from "next-auth/react";
 import { useContext, useEffect, useState } from "react";
-import useAsyncEffect from "use-async-effect";
-import { ApplicationContext } from "@/utils/ApplicationContext";
-import { timeout } from "@/utils/Timeout";
 import {
   ActivityStreak,
   calculateStreaks,
   sortStreaks,
 } from "@/utils/RunningStats";
-import getErrorMessageFromResponse from "@/utils/ResponseError";
 import { DateTime } from "luxon";
 import CurrentStreak from "@/components//CurrentStreak";
 import StreaksTable from "@/components/StreaksTable";
@@ -19,33 +14,14 @@ import {
   getMinDistance,
   getTimeZone,
 } from "@/utils/SettingsUtil";
-import { StravaContext } from "@/utils/StravaContext";
-
-function mergeNewActivities(
-  existingActivities: Activity[],
-  newActivities: Activity[]
-): Activity[] {
-  // If activity with id already existed, take newer one
-  const newActivityIds = new Set(newActivities.map((a) => a.id));
-  existingActivities = existingActivities.filter(
-    (a) => !newActivityIds.has(a.id)
-  );
-
-  // Ensure ordering
-  newActivities = newActivities.sort((a1, a2) => a1.start_date - a2.start_date);
-
-  return existingActivities.concat(newActivities);
-}
+import useStrava from "@/utils/useStrava";
 
 export default function Home() {
   const { data: session } = useSession();
   const [streaks, setStreaks] = useState<ActivityStreak[] | undefined>(
     undefined
   );
-  const [syncSuccessful, setSyncSuccessful] = useState(false);
-
-  const { getActivities, setActivities } = useContext(StravaContext);
-  const { setError, setIsActivitiesLoading } = useContext(ApplicationContext);
+  const { activities } = useStrava(session?.user?.id);
   const { settings } = useContext(SettingsContext);
 
   const tz = getTimeZone(settings);
@@ -57,84 +33,8 @@ export default function Home() {
       ? minDistance * 1000
       : minDistance * 1609.34;
 
-  const activities = getActivities(session?.user?.id);
-
-  useAsyncEffect(async () => {
-    if (session && session.user?.id) {
-      if (streaks !== undefined) {
-        return;
-      }
-
-      let mostRecentActivity = undefined;
-      if (activities && activities.length > 0) {
-        mostRecentActivity = activities[activities.length - 1];
-      }
-
-      let page = 1;
-      let allFetchedActivities: Activity[] = [];
-      let numNewActivitiesFetched = 0;
-
-      setIsActivitiesLoading(true);
-      do {
-        let fetchedActivities: Activity[] = [];
-
-        try {
-          const res = await fetch("/api/activities", {
-            method: "POST",
-            body: JSON.stringify({
-              page: page,
-              per_page: 200,
-              ...(mostRecentActivity && {
-                after: mostRecentActivity.start_date / 1000,
-              }),
-            }),
-          });
-
-          if (!res.ok) {
-            setIsActivitiesLoading(false);
-            setError({
-              message: await getErrorMessageFromResponse(res),
-              code: res.status,
-            });
-            return;
-          }
-
-          fetchedActivities = (await res.json()).activities as Activity[];
-
-          // Reverse if doing full hydration, since activities are returned in
-          // reverse chronological order
-          if (!mostRecentActivity) {
-            fetchedActivities = fetchedActivities.reverse();
-          }
-        } catch (e: any) {
-          setIsActivitiesLoading(false);
-          setError({ message: e.message ?? "Unknown error" });
-          return;
-        }
-
-        numNewActivitiesFetched = fetchedActivities.length;
-        allFetchedActivities = fetchedActivities.concat(allFetchedActivities);
-        page += 1;
-        await timeout(100);
-      } while (numNewActivitiesFetched > 0);
-
-      setIsActivitiesLoading(false);
-
-      const finalMergedActivities = mergeNewActivities(
-        activities ?? [],
-        allFetchedActivities
-      );
-      setActivities(session.user.id, finalMergedActivities);
-
-      setStreaks(
-        calculateStreaks(now, tz, finalMergedActivities, 1, minDistanceMeters)
-      );
-      setSyncSuccessful(true);
-    }
-  }, [session?.user?.id, activities?.length]);
-
   useEffect(() => {
-    if (activities && syncSuccessful) {
+    if (activities) {
       setStreaks(calculateStreaks(now, tz, activities, 1, minDistanceMeters));
     }
   }, [activities, tz, minDistanceMeters]);
@@ -151,11 +51,9 @@ export default function Home() {
   const topTenStreaks = streaks?.sort(sortStreaks).reverse().slice(0, 10);
 
   return (
-    <div className="">
+    <>
       <CurrentStreak currentStreak={currentStreak} />
-      {topTenStreaks && syncSuccessful && (
-        <StreaksTable topN={10} topStreaks={topTenStreaks} />
-      )}
-    </div>
+      {topTenStreaks && <StreaksTable topN={10} topStreaks={topTenStreaks} />}
+    </>
   );
 }
