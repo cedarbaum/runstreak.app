@@ -145,7 +145,7 @@ export default function Analytics() {
       <div className="h-[33vh] md:h-[50vh]">
         <Line options={options} data={timeseriesData} />
       </div>
-      <div className="flex flex-col lg:flex-row lg:justify-between mt-8 mb-8 rounded-md ring-1 ring-inset ring-gray-300 p-4">
+      <div className="flex flex-col lg:flex-row lg:justify-between mt-8 mb-8 ring-1 ring-inset ring-gray-300 p-4">
         <div className="mb-4 lg:mb-0">
           <StatSelector stats={activityStats} onChange={setStat} />
         </div>
