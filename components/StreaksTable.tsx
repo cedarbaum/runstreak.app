@@ -8,6 +8,7 @@ import {
   streakStats,
 } from "@/utils/RunningStats";
 import { SettingsContext, SettingsContextType } from "@/utils/SettingsContext";
+import Link from "next/link";
 import { useContext } from "react";
 
 export interface StreaksTableProps {
@@ -47,8 +48,8 @@ export default function StreaksTable({ topN, topStreaks }: StreaksTableProps) {
                         }`}
                       >
                         {stat.name}{" "}
-                        {stat.unit(settings) !== ""
-                          ? `(${stat.unit(settings)})`
+                        {stat.unit(settings, true) !== ""
+                          ? `(${stat.unit(settings, true)})`
                           : ""}
                       </th>
                     ))}
@@ -66,7 +67,22 @@ export default function StreaksTable({ topN, topStreaks }: StreaksTableProps) {
                               : ""
                           }`}
                         >
-                          {stat.calc(streak, settings)}
+                          {statIdx > 0 ? (
+                            stat.calc(streak, settings, true)
+                          ) : (
+                            <Link
+                              href={{
+                                pathname: "/analytics",
+                                query: {
+                                  startTime: streak?.startTime,
+                                  endTime: streak?.endTime,
+                                },
+                              }}
+                              className="underline decoration-indigo-600 ml-1 mt-2"
+                            >
+                              {stat.calc(streak, settings, true)}
+                            </Link>
+                          )}
                         </td>
                       ))}
                     </tr>

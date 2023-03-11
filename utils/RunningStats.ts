@@ -1,6 +1,12 @@
+import { groupBy } from "lodash";
 import { DateTime, Duration } from "luxon";
 import { Settings } from "./SettingsContext";
-import { getDistanceUnit } from "./SettingsUtil";
+import {
+  formatDate,
+  formatDateIntl,
+  getDistanceUnit,
+  getTimeZone,
+} from "./SettingsUtil";
 import { Activity } from "./StravaTypes";
 
 const metersToMiles = (meters: number) => meters * 0.000621371;
@@ -22,10 +28,14 @@ export type ActivityStreak = {
   endTime: number;
 };
 
-interface Statistic {
+export interface Statistic {
   name: string;
-  calc: (streak: ActivityStreak, settings: Settings | null) => number | string;
-  unit: (settings: Settings | null) => string;
+  calc: (
+    streak: ActivityStreak,
+    settings: Settings | null,
+    format?: boolean
+  ) => number | string;
+  unit: (settings: Settings | null, formatted?: boolean) => string;
 }
 
 export const streakStats: Statistic[] = [
@@ -59,7 +69,7 @@ export const activityStats: Statistic[] = [
   },
   {
     name: "Avg. speed",
-    calc: (streak: ActivityStreak, settings: Settings | null) => {
+    calc: (streak: ActivityStreak, settings: Settings | null, format) => {
       const activities = streak.activities;
       const totalAvgSpeed = activities.reduce(
         (acc, activity) => acc + activity.average_speed,
@@ -71,13 +81,16 @@ export const activityStats: Statistic[] = [
           ? metersPerSecondToMinutesPerMile(totalAvgSpeed / activities.length)
           : metersPerSecondToMinutesPerKm(totalAvgSpeed / activities.length);
 
-      return Duration.fromObject({ minutes: minutesPerUnit }).toFormat("mm:ss");
+      const duration = Duration.fromObject({ minutes: minutesPerUnit });
+      return format
+        ? duration.toFormat("mm:ss")
+        : duration.as("minutes").toFixed(2);
     },
     unit: (settings) => `min/${getDistanceUnit(settings)}`,
   },
   {
     name: "Avg. moving time",
-    calc: (streak: ActivityStreak, settings: Settings | null) => {
+    calc: (streak: ActivityStreak, settings: Settings | null, format) => {
       const activities = streak.activities;
       const totalDuration = activities.reduce(
         (acc, activity) => acc + activity.moving_time,
@@ -88,9 +101,11 @@ export const activityStats: Statistic[] = [
         (totalDuration * 1000) / activities.length
       ).normalize();
 
-      return averageDuration.toFormat("hh:mm:ss");
+      return format
+        ? averageDuration.toFormat("hh:mm:ss")
+        : averageDuration.as("minutes").toFixed(2);
     },
-    unit: (settings) => "",
+    unit: (settings, formatted) => (formatted ? "" : "mins"),
   },
   {
     name: "Total distance",
@@ -222,4 +237,59 @@ export function sortStreaks(s1: ActivityStreak, s2: ActivityStreak) {
   }
 
   return 0;
+}
+
+export enum DateBucket {
+  Day = "Day",
+  Week = "Week",
+  Month = "Month",
+  Year = "Year",
+}
+
+export function groupActivitiesByBucket(
+  activities: Activity[],
+  bucket: DateBucket,
+  settings: Settings | null
+) {
+  const bucketedActivities = groupBy(activities, (activity) => {
+    const date = DateTime.fromMillis(activity.start_date).setZone(
+      getTimeZone(settings)
+    );
+
+    let bucketMillis;
+    let bucketLabel;
+    switch (bucket) {
+      case DateBucket.Day:
+        bucketMillis = date.startOf("day").toMillis();
+        bucketLabel = formatDateIntl(bucketMillis, settings);
+        break;
+      case DateBucket.Week:
+        bucketMillis = date.startOf("week").toMillis();
+        bucketLabel = formatDateIntl(bucketMillis, settings);
+        break;
+      case DateBucket.Month:
+        bucketMillis = date.startOf("month").toMillis();
+        bucketLabel = formatDate(bucketMillis, "MM/yyyy", settings);
+        break;
+      case DateBucket.Year:
+        bucketMillis = date.startOf("year").toMillis();
+        bucketLabel = formatDate(bucketMillis, "yyyy", settings);
+        break;
+    }
+
+    return `${bucketMillis}___${bucketLabel}`;
+  });
+
+  const sortedKeys = Object.keys(bucketedActivities).sort(
+    (a, b) => parseInt(a.split("___")[0]) - parseInt(b.split("___")[0])
+  );
+
+  return sortedKeys.map((key) => {
+    const [bucketMillis, bucketLabel] = key.split("___");
+    return {
+      bucketMillis: parseInt(bucketMillis),
+      bucketLabel,
+      activities: bucketedActivities[key],
+    };
+  });
 }

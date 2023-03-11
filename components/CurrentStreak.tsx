@@ -2,6 +2,7 @@ import CountUp from "react-countup";
 import { ActivityStreak, activityStats } from "@/utils/RunningStats";
 import { useContext } from "react";
 import { SettingsContext, SettingsContextType } from "@/utils/SettingsContext";
+import Link from "next/link";
 
 export interface CurrentStreakProps {
   currentStreak: ActivityStreak | undefined;
@@ -42,8 +43,9 @@ export default function CurrentStreak({ currentStreak }: CurrentStreakProps) {
                 <br />
                 <span>
                   {currentStreak
-                    ? `${stat.calc(currentStreak, settings)} ${stat.unit(
-                        settings
+                    ? `${stat.calc(currentStreak, settings, true)} ${stat.unit(
+                        settings,
+                        true
                       )}`
                     : "--"}
                 </span>
@@ -52,6 +54,18 @@ export default function CurrentStreak({ currentStreak }: CurrentStreakProps) {
           ))}
         </dl>
       </div>
+      <Link
+        href={{
+          pathname: "/analytics",
+          query: {
+            startTime: currentStreak?.startTime,
+            endTime: currentStreak?.endTime,
+          },
+        }}
+        className="underline decoration-indigo-600 ml-1 mt-2"
+      >
+        See Analytics &rarr;
+      </Link>
     </dl>
   );
 }
