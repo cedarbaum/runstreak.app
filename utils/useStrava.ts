@@ -61,10 +61,10 @@ export default function useStrava(athleteId: string | undefined) {
   } = useQuery(
     ["activities", athleteId],
     async () => {
-      const activities = getActivities(athleteId);
+      const activities = getActivities(athleteId) ?? [];
 
       let mostRecentActivity = undefined;
-      if (activities && activities.length > 0) {
+      if (activities.length > 0) {
         mostRecentActivity = activities[activities.length - 1];
       }
 
@@ -105,7 +105,7 @@ export default function useStrava(athleteId: string | undefined) {
       } while (numNewActivitiesFetched > 0);
 
       const finalMergedActivities = mergeNewActivities(
-        getActivities(athleteId) ?? [],
+        activities,
         allFetchedActivities
       );
 
@@ -119,10 +119,10 @@ export default function useStrava(athleteId: string | undefined) {
 
   return {
     athlete,
-    athleteLoading: athleteLoading && !!athlete,
+    athleteLoading: athleteLoading && !!athleteId,
     athleteError,
     activities,
-    activitiesLoading: activitiesLoading && !!athlete,
+    activitiesLoading: activitiesLoading && !!athleteId,
     activitiesError,
   };
 }
