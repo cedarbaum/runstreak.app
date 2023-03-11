@@ -55,7 +55,7 @@ export default function Layout({ children }: { children: JSX.Element }) {
                       onClose={() => setShowBanner(false)}
                     />
                   )}
-                  <Header athlete={athlete} />
+                  <Header />
                 </>
               </header>
             )}

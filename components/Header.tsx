@@ -2,20 +2,18 @@ import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import Image from "next/image";
 import getRunnerEmojiForAthlete from "@/utils/getRunnerEmojiForAthlete";
-import { Athlete } from "@/utils/StravaTypes";
 import { useWindowWidth } from "@react-hook/window-size";
 import SettingsPopover from "./SettingsPopover";
 import Link from "next/link";
 import useStrava from "@/utils/useStrava";
 
-export interface HeaderProps {
-  athlete: Athlete | undefined | null;
-}
-
-export default function Header({ athlete }: HeaderProps) {
+export default function Header() {
   const { data: session, status: sessionStatus } = useSession();
-  const { activitiesLoading, athleteLoading } = useStrava(session?.user?.id);
+  const { activitiesLoading, athleteLoading, athlete } = useStrava(
+    session?.user?.id
+  );
   const [loadingCounter, setLoadingCounter] = useState(0);
+
   const sessionLoading = sessionStatus === "loading";
   const loading = activitiesLoading || athleteLoading || sessionLoading;
   const athleteEmoji = getRunnerEmojiForAthlete(athlete);
