@@ -37,6 +37,7 @@ ChartJS.register(
 );
 
 const options = {
+  maintainAspectRatio: false,
   responsive: true,
   plugins: {
     legend: {
@@ -137,11 +138,13 @@ export default function Analytics() {
 
   return (
     <div>
-      <h1 className="font-bold text-2xl mb-4">{`Statistic for streak between ${formatDateIntl(
+      <h1 className="font-bold text-xl md:text-2xl mb-4">{`Statistic for streak between ${formatDateIntl(
         streak?.startTime,
         settings
       )} - ${formatDateIntl(streak?.endTime, settings)}`}</h1>
-      <Line options={options} data={timeseriesData} />
+      <div className="h-[33vh] md:h-[50vh]">
+        <Line options={options} data={timeseriesData} />
+      </div>
       <div className="flex flex-col lg:flex-row lg:justify-between mt-8 mb-8 rounded-md ring-1 ring-inset ring-gray-300 p-4">
         <div className="mb-4 lg:mb-0">
           <StatSelector stats={activityStats} onChange={setStat} />
