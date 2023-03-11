@@ -1,12 +1,13 @@
 import { Athlete } from "./StravaTypes";
 
-export default function getRunnerEmojiForAthlete(athlete: Athlete | undefined | null) {
-  let athleteEmoji = "🏃";
+export default function getRunnerEmojiForAthlete(
+  athlete: Athlete | undefined | null
+) {
   if (athlete?.sex === "M") {
-    athleteEmoji = "🏃‍♂️‍️";
+    return "🏃‍♂️‍️";
   } else if (athlete?.sex === "F") {
-    athleteEmoji = "🏃‍♀️";
+    return "🏃‍♀️";
   }
 
-  return athleteEmoji;
+  return "🏃";
 }
