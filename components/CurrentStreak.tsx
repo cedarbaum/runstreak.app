@@ -54,18 +54,20 @@ export default function CurrentStreak({ currentStreak }: CurrentStreakProps) {
           ))}
         </dl>
       </div>
-      <Link
-        href={{
-          pathname: "/analytics",
-          query: {
-            startTime: currentStreak?.startTime,
-            endTime: currentStreak?.endTime,
-          },
-        }}
-        className="underline decoration-indigo-600 ml-1 mt-2"
-      >
-        See Analytics &rarr;
-      </Link>
+      {currentStreak && (
+        <Link
+          href={{
+            pathname: "/analytics",
+            query: {
+              startTime: currentStreak?.startTime,
+              endTime: currentStreak?.endTime,
+            },
+          }}
+          className="underline decoration-indigo-600 ml-1 mt-2"
+        >
+          See Analytics &rarr;
+        </Link>
+      )}
     </dl>
   );
 }
