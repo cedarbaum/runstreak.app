@@ -17,7 +17,7 @@ export default function StatSelector({
       </label>
       <fieldset className="mt-4 flex justify-center">
         <legend className="sr-only">Graph statistic</legend>
-        <div className="space-y-2 flex flex-col md:flex-row space-y-0 md:space-x-4 w-fit">
+        <div className="flex flex-col md:flex-row md:space-x-4 w-fit">
           {stats.map((stat, idx) => (
             <div key={stat.name} className="flex items-center">
               <input
