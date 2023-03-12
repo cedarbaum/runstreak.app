@@ -9,8 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@aws-sdk/client-dynamodb": "^3.287.0",
-    "@aws-sdk/lib-dynamodb": "^3.267.0",
     "@headlessui/react": "^1.7.10",
     "@heroicons/react": "^2.0.15",
     "@next/font": "13.1.6",
@@ -21,6 +19,8 @@
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
     "@types/react-measure": "^2.0.8",
+    "@upstash/ratelimit": "^0.4.0",
+    "@upstash/redis": "^1.20.1",
     "@vercel/analytics": "^0.1.10",
     "chart.js": "^4.2.1",
     "eslint": "8.33.0",

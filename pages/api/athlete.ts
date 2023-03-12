@@ -4,7 +4,7 @@ import { getToken } from "next-auth/jwt";
 import { Athlete } from "@/utils/StravaTypes";
 
 import stravaApi from "strava-v3";
-import { DynamoDbRequestThrottler } from "@/utils/DynamoDbRequestThrottler";
+import stravaUserCanMakeRequest from "@/utils/RequestThrottling";
 
 const schemaVersion = 1;
 
@@ -17,14 +17,6 @@ type Error = {
   error: string;
 };
 
-const dynamoDbRequestThrottler = new DynamoDbRequestThrottler(
-  process.env.DDB_ACCESS_KEY_ID!,
-  process.env.DDB_SECRET_ACCESS_KEY!,
-  process.env.DDB_REGION!,
-  process.env.DDB_TABLE_NAME!,
-  parseInt(process.env.STRAVA_DAILY_API_LIMIT!)
-);
-
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data | Error>
@@ -34,9 +26,7 @@ export default async function handler(
     return res.status(400).json({ error: "Invalid JWT" });
   }
 
-  if (
-    !(await dynamoDbRequestThrottler.canMakeRequest(jwt.user.id.toString()))
-  ) {
+  if (!(await stravaUserCanMakeRequest(jwt.user.id))) {
     return res.status(429).json({ error: "Account exceeded request limit" });
   }
 
