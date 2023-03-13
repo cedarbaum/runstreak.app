@@ -1,11 +1,7 @@
 import { useSession } from "next-auth/react";
-import { useContext, useEffect, useState } from "react";
 import {
-  ActivityStreak,
-  calculateStreaks,
   sortStreaks,
 } from "@/utils/RunningStats";
-import { DateTime } from "luxon";
 import CurrentStreak from "@/components//CurrentStreak";
 import StreaksTable from "@/components/StreaksTable";
 import useRunStreakData from "@/utils/useRunStreakData";
