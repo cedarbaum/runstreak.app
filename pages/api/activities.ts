@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import stravaUserCanMakeRequest from "@/utils/RequestThrottling";
+import stravaUserCanMakeRequest from "@/utils/RateLimiting";
 import { Activity } from "@/utils/StravaTypes";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getToken } from "next-auth/jwt";

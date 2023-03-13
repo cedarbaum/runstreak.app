@@ -4,7 +4,7 @@ import { getToken } from "next-auth/jwt";
 import { Athlete } from "@/utils/StravaTypes";
 
 import stravaApi from "strava-v3";
-import stravaUserCanMakeRequest from "@/utils/RequestThrottling";
+import stravaUserCanMakeRequest from "@/utils/RateLimiting";
 
 const schemaVersion = 1;
 
