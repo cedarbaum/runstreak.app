@@ -20,7 +20,7 @@ NEXTAUTH_SECRET=SECURE_GENERATED_SECRET
 
 ### Rate limiting
 
-Since Strava has a relatively strict default API limit per application, it is useful to restrict the number of API requests per account. This application uses Redis hosted hosted on [Upstash](https://upstash.com/) to track and throttle requests. Once you setup the Redis DB, fillout the following env variables:
+Since Strava has a relatively strict default API limit per application, it is useful to restrict the number of API requests per account. This application uses Redis hosted hosted on [Upstash](https://upstash.com/) to track and throttle requests. Once you setup the Redis DB, fill out the following env variables:
 
 ```
 UPSTASH_REDIS_REST_URL=URL
