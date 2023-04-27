@@ -10,7 +10,7 @@ export default function Footer({
   const { data: session } = useSession();
 
   return (
-    <div className="mx-auto max-w-7xl">
+    <div className="mx-auto">
       <div className="flex items-center justify-between py-2 md:py-6 md:space-x-10 flex-col md:flex-row border-t md:border-t-0">
         {session && (
           <div className="flex justify-start lg:w-0 lg:flex-1 mb-0.5 md:mb-0">
