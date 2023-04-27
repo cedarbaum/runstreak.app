@@ -41,7 +41,7 @@ export default function Header() {
   const fireEmojis = "🔥".repeat(loading ? loadingCounter : numFlames);
 
   return (
-    <div className="mx-auto max-w-7xl">
+    <div className="mx-auto">
       <div className="flex items-center justify-between py-6 md:justify-start md:space-x-10">
         <div className="flex justify-start lg:w-0 lg:flex-1">
           <Link href="/">
