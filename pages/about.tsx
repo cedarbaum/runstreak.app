@@ -93,14 +93,13 @@ export default function About() {
             >
               Vercel Analytics
             </a>
-            , which is fully anonymous and GDPR-compliant.
+            , which is fully anonymous.
           </li>
           <li>
             The only data we store is the number of requests your account makes
             during a 24 hour period. This is to ensure that a user does not use
             too much of our Strava API quota. The Strava account IDs are
-            securely hashed before being stored, so the original IDs cannot be
-            practically recovered from our database (even by us).
+            securely hashed before being stored, so the original IDs are obscured.
           </li>
         </ul>
       </section>
