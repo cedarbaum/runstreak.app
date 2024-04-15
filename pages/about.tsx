@@ -61,7 +61,7 @@ export default function About() {
         If you have any questions or feedback, please email me{" "}
         <a
           className="underline decoration-indigo-600"
-          href={process.env.NEXT_PUBLIC_CONTACT_EMAIL}
+          href={`mailto:${process.env.NEXT_PUBLIC_CONTACT_EMAIL}`}
         >
           here
         </a>
