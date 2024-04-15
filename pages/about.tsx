@@ -98,8 +98,7 @@ export default function About() {
           <li>
             The only data we store is the number of requests your account makes
             during a 24 hour period. This is to ensure that a user does not use
-            too much of our Strava API quota. The Strava account IDs are
-            securely hashed before being stored, so the original IDs are obscured.
+            too much of our Strava API quota.
           </li>
         </ul>
       </section>
