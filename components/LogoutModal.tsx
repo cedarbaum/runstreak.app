@@ -63,12 +63,12 @@ export default function LogoutModal({
                     </Dialog.Title>
                     <div className="mt-2">
                       <p className="text-sm text-gray-500 text-left">
-                        If you're on a public/shared device, it's recommended to
+                        If you&apos;re on a public/shared device, it&apos;s recommended to
                         also clear your cache to remove all of your data from
                         the browser.
                       </p>
                       <p className="text-sm text-gray-500 mt-2 text-left">
-                        If you're on a trusted device, you can choose to keep
+                        If you&apos;re on a trusted device, you can choose to keep
                         the data for the next time you sign in.
                       </p>
                     </div>
