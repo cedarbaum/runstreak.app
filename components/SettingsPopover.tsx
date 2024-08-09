@@ -5,23 +5,26 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/20/solid";
 import { signOut } from "next-auth/react";
 import { Fragment, useContext, useState } from "react";
 import ClearCacheModal from "./ClearCacheModal";
+import LogoutModal from "./LogoutModal";
 import TimezoneSelector from "./TimezoneSelector";
 
 export default function SettingsPopover() {
   const [showClearCacheModal, setShowClearCacheModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const { settings, setSettings } =
     useContext<SettingsContextType>(SettingsContext);
 
-  const clearCache = () => {
+  const closeAllModals = () => {
+    setShowClearCacheModal(false);
+    setShowLogoutModal(false);
+  };
+
+  const clearCacheAndSignOut = () => {
     localStorage.removeItem("strava-cache-athletes");
     localStorage.removeItem("strava-cache-activities");
     localStorage.removeItem("settings");
-    setShowClearCacheModal(false);
+    closeAllModals();
     signOut();
-  };
-
-  const cancel = () => {
-    setShowClearCacheModal(false);
   };
 
   const onMinDistanceInput = (e: any) => {
@@ -38,7 +41,17 @@ export default function SettingsPopover() {
   return (
     <>
       {showClearCacheModal && (
-        <ClearCacheModal onClear={clearCache} onClose={cancel} />
+        <ClearCacheModal
+          onClear={clearCacheAndSignOut}
+          onClose={closeAllModals}
+        />
+      )}
+      {showLogoutModal && (
+        <LogoutModal
+          onLogout={signOut}
+          onLogoutAndClearCache={clearCacheAndSignOut}
+          onClose={closeAllModals}
+        />
       )}
       <Popover className="relative]">
         {({ open }) => (
@@ -135,7 +148,7 @@ export default function SettingsPopover() {
                       <div className="w-[45%]">
                         <button
                           className="w-full inline-flex items-center justify-center border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                          onClick={() => signOut()}
+                          onClick={() => setShowLogoutModal(true)}
                         >
                           Sign out
                         </button>
